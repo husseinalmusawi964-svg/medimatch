@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediMatch - توثيق الكادر الطبي</title>
+    <link rel="stylesheet" href="stiyel.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body style="background-color: #f4f7f5; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0;">
+
+    <div class="heho">
+        <a href="ph.html"><img class="soso" src="imeg/IMG_9459.PNG" alt="Logo"></a>
+        <div class="fofo">
+            <a href="ph.html">Home</a>
+            <a href="help.html">Help</a>
+        </div>
+    </div>
+
+    <div style="padding: 40px 20px;">
+        <div style="max-width: 500px; margin: 0 auto; background: #fff; padding: 35px; border-radius: 16px; box-shadow: 0 8px 20px rgba(43, 88, 63, 0.08); border: 1px solid #d4ebd4; text-align: right;">
+            
+            <div style="text-align: center; margin-bottom: 25px;">
+                <div style="font-size: 2.5rem; color: #2b583f; margin-bottom: 10px;"><i class="fa-solid fa-clinic-medical"></i></div>
+                <h2 style="color: #2b583f; margin: 0; font-size: 1.4rem;">بيانات الاعتماد الطبي</h2>
+                <p style="color: #666; font-size: 0.85rem; margin-top: 5px;">أدخل معلومات الصيدلية والرمز الخاص بالموقع للمتابعة</p>
+            </div>
+
+            <form id="setup-form">
+                <div style="margin-bottom: 15px;">
+                    <label style="display: block; margin-bottom: 5px; color: #3b7a57; font-weight: bold;">اسم الدكتور / الصيدلاني:</label>
+                    <input type="text" id="docName" required style="width: 100%; padding: 10px; border: 1px solid #d4ebd4; border-radius: 6px; box-sizing: border-box;" placeholder="د. علي أحمد">
+                </div>
+
+                <div style="margin-bottom: 15px;">
+                    <label style="display: block; margin-bottom: 5px; color: #3b7a57; font-weight: bold;">اسم الصيدلية / العيادة:</label>
+                    <input type="text" id="pharmacyName" required style="width: 100%; padding: 10px; border: 1px solid #d4ebd4; border-radius: 6px; box-sizing: border-box;" placeholder="صيدلية الشفاء">
+                </div>
+
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; margin-bottom: 5px; color: #d9534f; font-weight: bold;"><i class="fa-solid fa-key"></i> الرمز الخاص بالموقع (سري):</label>
+                    <input type="password" id="secretCode" required style="width: 100%; padding: 10px; border: 1px solid #d4ebd4; border-radius: 6px; box-sizing: border-box;" placeholder="أدخل كود المالك الخاص">
+                </div>
+
+                <button type="submit" style="background: #2b583f; color: white; border: none; padding: 12px; border-radius: 25px; cursor: pointer; width: 100%; font-weight: bold; font-size: 1rem;">التحقق والدخول لصفحة الإضافة</button>
+            </form>
+
+            <div id="setup-error" style="color: #d9534f; text-align: center; margin-top: 15px; font-size: 0.9rem; display: none;"></div>
+        </div>
+    </div>
+
+    <script>
+        const MY_SECRET_SITE_CODE = "#MediMatch@2026$Rx"; 
+
+        if (!localStorage.getItem('isStepOneComplete')) {
+            window.location.href = 'signin.html';
+        }
+
+        document.getElementById('setup-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const docName = document.getElementById('docName').value.trim();
+            const pharmacyName = document.getElementById('pharmacyName').value.trim();
+            const inputSecret = document.getElementById('secretCode').value.trim();
+            const errorDiv = document.getElementById('setup-error');
+
+            if (inputSecret !== MY_SECRET_SITE_CODE) {
+                errorDiv.textContent = "❌ الرمز الخاص بالموقع غير صحيح! لا تملك صلاحية الوصول.";
+                errorDiv.style.display = 'block';
+                return;
+            }
+
+            localStorage.setItem('doctorName', docName);
+            localStorage.setItem('pharmacyName', pharmacyName);
+            localStorage.setItem('isAuthorizedDoctor', 'true');
+
+            alert('تم التوثيق بنجاح! جاري التوجيه إلى صفحة إضافة المريض.');
+            window.location.href = 'add-patient.html';
+        });
+    </script>
+</body>
+</html>

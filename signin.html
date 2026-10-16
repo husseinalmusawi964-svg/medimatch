@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediMatch - تسجيل الدخول ومزامنة الحسابات</title>
+    
+    <link rel="stylesheet" href="stiyel.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { 
+            background-color: #f4f7f5; 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            margin: 0; 
+            padding: 0; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            min-height: 100vh; 
+        }
+        .auth-card { 
+            background: #ffffff; 
+            width: 100%; 
+            max-width: 480px; 
+            padding: 35px; 
+            border-radius: 18px; 
+            box-shadow: 0 10px 30px rgba(43, 88, 63, 0.12); 
+            border: 1px solid #d4ebd4; 
+        }
+        .tab-btns { 
+            display: flex; 
+            margin-bottom: 25px; 
+            border-bottom: 2px solid #eef3f0; 
+        }
+        .tab-btn { 
+            flex: 1; 
+            padding: 12px; 
+            background: none; 
+            border: none; 
+            font-size: 1rem; 
+            font-weight: bold; 
+            cursor: pointer; 
+            color: #666; 
+            transition: 0.3s; 
+        }
+        .tab-btn.active { 
+            color: #2b583f; 
+            border-bottom: 3px solid #2b583f; 
+            margin-bottom: -2px; 
+        }
+        .form-section { display: none; }
+        .form-section.active { display: block; }
+        .input-group { margin-bottom: 15px; text-align: right; }
+        .input-group label { display: block; margin-bottom: 5px; color: #2b583f; font-weight: bold; font-size: 0.9rem; }
+        .input-group input { 
+            width: 100%; 
+            padding: 12px 14px; 
+            background: #fafcfb; 
+            border: 1px solid #cce5cc; 
+            color: #222; 
+            border-radius: 8px; 
+            font-size: 0.95rem; 
+            box-sizing: border-box; 
+        }
+        .input-group input:focus { 
+            border-color: #2b583f; 
+            outline: none; 
+            background: #fff;
+            box-shadow: 0 0 5px rgba(43, 88, 63, 0.2);
+        }
+        .btn-submit { 
+            background: #2b583f; 
+            color: white; 
+            border: none; 
+            width: 100%; 
+            padding: 13px; 
+            border-radius: 8px; 
+            font-weight: bold; 
+            font-size: 1rem; 
+            cursor: pointer; 
+            margin-top: 10px; 
+            transition: 0.2s; 
+        }
+        .btn-submit:hover { background: #1f3f2d; }
+        .sync-box {
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px dashed #d4ebd4;
+            text-align: center;
+        }
+        .btn-sync {
+            background: #3b7a57;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            margin: 4px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="auth-card">
+        <div style="text-align: center; margin-bottom: 20px;">
+            <img src="imeg/IMG_9459.PNG" alt="Logo" style="width: 75px; height: 75px; object-fit: contain;">
+            <h2 style="color: #2b583f; margin: 10px 0 5px 0;">نظام MediMatch الطبي</h2>
+            <p style="color: #666; font-size: 0.85rem;">بوابة إدارة الصيدليات والمرضى المعتمدة</p>
+        </div>
+
+        <div class="tab-btns">
+            <button class="tab-btn active" onclick="switchTab('signin')">تسجيل الدخول</button>
+            <button class="tab-btn" onclick="switchTab('signup')">إنشاء حساب جديد</button>
+        </div>
+
+        <!-- قسم تسجيل الدخول -->
+        <div id="signinSection" class="form-section active">
+            <form onsubmit="handleSecureLogin(event)">
+                <div class="input-group">
+                    <label><i class="fa-solid fa-at"></i> اسم المستخدم (Username):</label>
+                    <input type="text" id="loginUsername" required autocomplete="off" placeholder="مثال: dr_ahmed">
+                </div>
+                <div class="input-group">
+                    <label><i class="fa-solid fa-key"></i> كلمة المرور:</label>
+                    <input type="password" id="loginPassword" required placeholder="••••••••">
+                </div>
+                <button type="submit" class="btn-submit">دخول إلى لوحة التحكم</button>
+            </form>
+        </div>
+
+        <!-- قسم إنشاء حساب جديد بالترتيب المطلوب بدقة -->
+        <div id="signupSection" class="form-section">
+            <form onsubmit="handleSecureRegister(event)">
+                
+                <!-- 1. رمز الصلاحية (الموقع) -->
+                <div class="input-group" style="background: #f0f7f4; padding: 12px; border-radius: 10px; border: 1px dashed #2b583f;">
+                    <label style="color: #2b583f;"><i class="fa-solid fa-shield-halved" style="color: #b22222;"></i> رمز الصلاحية المعتمد (الرمز):</label>
+                    <input type="password" id="regMasterKey" required placeholder="أدخل رمز التسجيل السري" style="border-color: #f5c6cb; background: #fffdfd;">
+                </div>
+
+                <!-- 2. البريد الإلكتروني -->
+                <div class="input-group">
+                    <label><i class="fa-solid fa-envelope"></i> البريد الإلكتروني:</label>
+                    <input type="email" id="regEmail" required placeholder="name@example.com">
+                </div>
+
+                <!-- 3. اسم المستخدم -->
+                <div class="input-group">
+                    <label><i class="fa-solid fa-at"></i> اسم المستخدم:</label>
+                    <input type="text" id="regName" required placeholder="د. أحمد محمد">
+                </div>
+
+                <!-- 4. اسم الصيدلية -->
+                <div class="input-group">
+                    <label><i class="fa-solid fa-hospital"></i> اسم الصيدلية:</label>
+                    <input type="text" id="regPharmacy" required placeholder="صيدلية الشفاء المركزية">
+                </div>
+
+                <!-- 5. اليوزر نيم (مع إضافة الـ @) -->
+                <div class="input-group">
+                    <label><i class="fa-solid fa-at"></i> يوزر نيم (Username):</label>
+                    <div style="display: flex; align-items: center; position: relative;">
+                        <span style="position: absolute; right: 12px; color: #666; font-weight: bold; font-size: 1rem;">@</span>
+                        <input type="text" id="regUsername" required placeholder="dr_ahmed" style="padding-right: 32px;">
+                    </div>
+                </div>
+
+                <!-- 6. الرمز السري للحساب -->
+                <div class="input-group">
+                    <label><i class="fa-solid fa-lock"></i> الرمز السري للحساب:</label>
+                    <input type="password" id="regAccountPass" required placeholder="••••••••">
+                </div>
+
+                <!-- 7. تأكيد الرمز -->
+                <div class="input-group">
+                    <label><i class="fa-solid fa-lock-open"></i> تأكيد الرمز السري:</label>
+                    <input type="password" id="regAccountPassConfirm" required placeholder="••••••••">
+                </div>
+
+                <button type="submit" class="btn-submit">إنشاء الحساب وبدء العمل</button>
+            </form>
+        </div>
+
+        <!-- أداة نقل الحسابات للجهاز الثاني -->
+        <div class="sync-box">
+            <p style="font-size: 0.8rem; color: #555; margin-bottom: 8px;"><i class="fa-solid fa-arrows-rotate"></i> لنقل الحسابات والعمل من جهاز آخر:</p>
+            <button onclick="exportAccounts()" class="btn-sync"><i class="fa-solid fa-copy"></i> نسخ كود الحسابات من هذا الجهاز</button>
+            <button onclick="importAccounts()" class="btn-sync" style="background: #2b583f;"><i class="fa-solid fa-download"></i> استيراد كود في جهاز جديد</button>
+        </div>
+    </div>
+
+    <script>
+        const ADMIN_SECRET_REGISTRATION_KEY = "MED-PHARMACY-2026-KEY";
+
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.form-section').forEach(s => s.classList.remove('active'));
+
+            if (tab === 'signin') {
+                document.querySelectorAll('.tab-btn')[0].classList.add('active');
+                document.getElementById('signinSection').classList.add('active');
+            } else {
+                document.querySelectorAll('.tab-btn')[1].classList.add('active');
+                document.getElementById('signupSection').classList.add('active');
+            }
+        }
+
+        async function hashPassword(password) {
+            const msgBuffer = new TextEncoder().encode(password);
+            const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+        }
+
+        async function handleSecureRegister(e) {
+            e.preventDefault();
+            const inputMasterKey = document.getElementById('regMasterKey').value.trim();
+            const email = document.getElementById('regEmail').value.trim();
+            const fullName = document.getElementById('regName').value.trim();
+            const pharmacyName = document.getElementById('regPharmacy').value.trim();
+            let username = document.getElementById('regUsername').value.trim().toLowerCase();
+            
+            // تنظيف الـ يوزر نيم وإزالة أي علامة @ إضافية لو كتبها المستخدم يدوياً بالخطأ
+            username = username.replace(/^@/, '');
+
+            const rawPassword = document.getElementById('regAccountPass').value;
+            const confirmPassword = document.getElementById('regAccountPassConfirm').value;
+
+            if (rawPassword !== confirmPassword) {
+                alert('⚠️ خطأ: الرمز السري غير متطابق مع حقل التأكيد!');
+                return;
+            }
+
+            if (inputMasterKey !== ADMIN_SECRET_REGISTRATION_KEY) {
+                alert('❌ خطأ أمني: رمز الصلاحية المعتمد غير صحيح!');
+                return;
+            }
+
+            let users = JSON.parse(localStorage.getItem('medimatch_secure_db')) || [];
+            if (users.some(u => u.username === username)) {
+                alert('⚠️ يوزر المستخدم مستخدم بالفعل، يرجى اختيار اسم آخر.');
+                return;
+            }
+
+            const hashedPassword = await hashPassword(rawPassword);
+            const newUser = { email, fullName, pharmacyName, username, passwordHash: hashedPassword, patientsList: [] };
+
+            users.push(newUser);
+            localStorage.setItem('medimatch_secure_db', JSON.stringify(users));
+
+            localStorage.setItem('isAuthorizedDoctor', 'true');
+            localStorage.setItem('currentActiveUser', username);
+            localStorage.setItem('pharmacyPatientsList', JSON.stringify([]));
+
+            alert('🎉 تم إنشاء الحساب بنجاح!');
+            window.location.href = 'index.html';
+        }
+
+        async function handleSecureLogin(e) {
+            e.preventDefault();
+            let username = document.getElementById('loginUsername').value.trim().toLowerCase();
+            username = username.replace(/^@/, '');
+            const rawPassword = document.getElementById('loginPassword').value;
+
+            let users = JSON.parse(localStorage.getItem('medimatch_secure_db')) || [];
+            const hashedInputPassword = await hashPassword(rawPassword);
+            const user = users.find(u => u.username === username && u.passwordHash === hashedInputPassword);
+
+            if (user) {
+                localStorage.setItem('isAuthorizedDoctor', 'true');
+                localStorage.setItem('currentActiveUser', user.username);
+                localStorage.setItem('pharmacyPatientsList', JSON.stringify(user.patientsList || []));
+
+                alert(`مرحباً بك مجدداً د. ${user.fullName}`);
+                window.location.href = 'index.html';
+            } else {
+                alert('❌ اسم المستخدم أو الرمز السري غير صحيح على هذا الجهاز!');
+            }
+        }
+
+        function exportAccounts() {
+            const data = localStorage.getItem('medimatch_secure_db');
+            if (!data) {
+                alert('لا توجد حسابات مسجلة على هذا الجهاز حالياً.');
+                return;
+            }
+            navigator.clipboard.writeText(data).then(() => {
+                alert('📋 تم نسخ كود الحسابات بنجاح! أرسله للجهاز الثاني واضغط على "استيراد كود" هناك.');
+            });
+        }
+
+        function importAccounts() {
+            const code = prompt('ضع كود الحسابات المنسوخ من الجهاز الأول هنا:');
+            if (code) {
+                try {
+                    JSON.parse(code);
+                    localStorage.setItem('medimatch_secure_db', code);
+                    alert('✅ تم نقل وتفعيل الحسابات على هذا الجهاز بنجاح! يمكنك الآن تسجيل الدخول.');
+                } catch(e) {
+                    alert('❌ كود غير صالح!');
+                }
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediMatch - قائمة المرضى</title>
+    
+    <script>
+        if (localStorage.getItem('isAuthorizedDoctor') !== 'true') {
+            alert('⚠️ غير مصرح لك بالدخول!');
+            window.location.href = 'signin.html';
+        }
+    </script>
+
+    <link rel="stylesheet" href="stiyel.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        .patients-table { width: 100%; border-collapse: collapse; margin-top: 15px; background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+        .patients-table th, .patients-table td { padding: 14px 16px; text-align: right; border-bottom: 1px solid #eef3f0; }
+        .patients-table th { background-color: #2b583f; color: #fff; font-weight: 600; }
+        .patients-table tr:hover { background-color: #f9fbf9; }
+        .btn-edit-patient { background-color: #3b7a57; color: white; border: none; padding: 8px 14px; border-radius: 8px; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; }
+        .btn-delete-patient { background-color: #d9534f; color: white; border: none; padding: 8px 12px; border-radius: 8px; cursor: pointer; margin-right: 5px; }
+        .badge-allergy { background-color: #f8d7da; color: #721c24; padding: 4px 8px; border-radius: 6px; font-size: 0.82rem; font-weight: bold; }
+    </style>
+</head>
+<body style="background-color: #f4f7f5; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0;">
+
+    <div class="heho">
+        <a href="index.html"><img class="soso" src="imeg/IMG_9459.PNG" alt="Logo"></a>
+        <div class="fofo" id="navLinksContainer">
+            <a href="index.html">Home</a>
+            <a href="my-patients.html" style="color: #2b583f; font-weight: bold;">My Patients</a>
+            <a href="add-patient.html">Add patient</a>
+            <a href="help.html">Help</a>
+            <span id="authNavArea">
+                <a href="signin.html" style="color: #2b583f; font-weight: bold;">Sign In</a>
+            </span>
+        </div>
+    </div>
+
+    <div style="padding: 30px 20px; max-width: 1000px; margin: 0 auto;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <h2 style="color: #2b583f; margin: 0;"><i class="fa-solid fa-users-medical"></i> قائمة المرضى المسجلين</h2>
+            <a href="add-patient.html" class="btn-submit-main" style="text-decoration: none; padding: 10px 18px; width: auto;"><i class="fa-solid fa-user-plus"></i> إضافة مريض جديد</a>
+        </div>
+        <div id="patientsContainer"></div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const isAuth = localStorage.getItem('isAuthorizedDoctor');
+            const activeUsername = localStorage.getItem('currentActiveUser');
+            const authNavArea = document.getElementById('authNavArea');
+
+            if (isAuth === 'true' && activeUsername) {
+                let users = JSON.parse(localStorage.getItem('medimatch_secure_db')) || [];
+                let currentUser = users.find(u => u.username === activeUsername);
+                let displayName = currentUser ? currentUser.fullName : activeUsername;
+
+                authNavArea.innerHTML = `
+                    <span style="color: #85c29d; font-weight: bold; padding: 6px 10px; display: inline-flex; align-items: center; gap: 5px;">
+                        <i class="fa-solid fa-user-shield"></i> ${displayName}
+                    </span>
+                    <button onclick="logoutSystem()" style="background: #d9534f; color: white; border: none; padding: 5px 10px; border-radius: 12px; cursor: pointer; font-size: 0.8rem; margin-right: 5px;">خروج</button>
+                `;
+            }
+            renderPatientsTable();
+        });
+
+        function logoutSystem() {
+            localStorage.removeItem('isAuthorizedDoctor');
+            localStorage.removeItem('currentActiveUser');
+            localStorage.removeItem('pharmacyPatientsList');
+            window.location.href = 'signin.html';
+        }
+
+        function deletePatient(serialId) {
+            if (confirm(`هل أنت متأكد من حذف المريض (${serialId})؟`)) {
+                let patientsList = JSON.parse(localStorage.getItem('pharmacyPatientsList')) || [];
+                patientsList = patientsList.filter(p => p.serialId !== serialId);
+                localStorage.setItem('pharmacyPatientsList', JSON.stringify(patientsList));
+
+                let activeUser = localStorage.getItem('currentActiveUser');
+                if (activeUser) {
+                    let allUsers = JSON.parse(localStorage.getItem('medimatch_secure_db')) || [];
+                    let uIndex = allUsers.findIndex(u => u.username === activeUser);
+                    if (uIndex !== -1) {
+                        allUsers[uIndex].patientsList = patientsList;
+                        localStorage.setItem('medimatch_secure_db', JSON.stringify(allUsers));
+                    }
+                }
+                renderPatientsTable();
+            }
+        }
+
+        function renderPatientsTable() {
+            const container = document.getElementById('patientsContainer');
+            const patientsList = JSON.parse(localStorage.getItem('pharmacyPatientsList')) || [];
+
+            if (patientsList.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; background: white; padding: 40px; border-radius: 12px; border: 1px solid #d4ebd4;">
+                        <i class="fa-solid fa-folder-open" style="font-size: 3rem; color: #a8c2b3; margin-bottom: 12px;"></i>
+                        <h3 style="color: #2b583f; margin: 0;">لا يوجد مرضى مسجلين حتى الآن</h3>
+                    </div>`;
+                return;
+            }
+
+            let tableHtml = `
+                <table class="patients-table">
+                    <thead>
+                        <tr>
+                            <th>الرقم التسلسلي</th>
+                            <th>اسم المريض</th>
+                            <th>العمر</th>
+                            <th>الحالة الصحية</th>
+                            <th>حساسية الأدوية</th>
+                            <th>الأدوية</th>
+                            <th>الإجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody>`;
+
+            patientsList.forEach(patient => {
+                const medCount = patient.medicines ? patient.medicines.length : 0;
+                const allergyDisplay = (patient.allergies && patient.allergies !== 'لا توجد') 
+                    ? `<span class="badge-allergy">${patient.allergies}</span>` 
+                    : '<span style="color: #888;">لا توجد</span>';
+
+                tableHtml += `
+                    <tr>
+                        <td><b>${patient.serialId}</b></td>
+                        <td>${patient.name}</td>
+                        <td>${patient.age} سنة</td>
+                        <td>${patient.condition}</td>
+                        <td>${allergyDisplay}</td>
+                        <td>${medCount} دواء</td>
+                        <td>
+                            <a href="add-patient.html?edit=${patient.serialId}" class="btn-edit-patient">
+                                <i class="fa-solid fa-pen-to-square"></i> تعديل
+                            </a>
+                            <button onclick="deletePatient('${patient.serialId}')" class="btn-delete-patient">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>`;
+            });
+            tableHtml += `</tbody></table>`;
+            container.innerHTML = tableHtml;
+        }
+    </script>
+</body>
+</html>

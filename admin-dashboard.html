@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediMatch - سجل الصيدليات والمرضى</title>
+    
+    <script>
+        const OWNER_SECRET_KEY = "#MediMatch@2026$Rx";
+        let isOwnerPassed = sessionStorage.getItem('isOwnerPassed');
+
+        if (!isOwnerPassed) {
+            const userInput = prompt("🔐 هذه الصفحة خاصة بمالك الموقع فقط. أدخل الرمز السري للمتابعة:");
+            if (userInput === OWNER_SECRET_KEY) {
+                sessionStorage.setItem('isOwnerPassed', 'true');
+            } else {
+                alert("❌ الرمز السري غير صحيح! ليس لديك صلاحية الوصول.");
+                window.location.href = "ph.html";
+            }
+        }
+    </script>
+
+    <link rel="stylesheet" href="stiyel.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body style="background-color: #f4f7f5; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0;">
+
+    <div class="heho">
+        <a href="ph.html"><img class="soso" src="imeg/IMG_9459.PNG" alt="Logo"></a>
+        <div class="fofo">
+            <a href="ph.html">Home</a>
+            <a href="add-patient.html">Add patient</a>
+            <a href="help.html">Help</a>
+            <button onclick="logoutOwner()" style="background: #d9534f; color: white; border: none; padding: 6px 15px; border-radius: 15px; cursor: pointer;">قفل اللوحة</button>
+        </div>
+    </div>
+
+    <div style="padding: 40px 20px;">
+        <div style="max-width: 800px; margin: 0 auto; background: #fff; padding: 35px; border-radius: 16px; box-shadow: 0 8px 20px rgba(43, 88, 63, 0.08); border: 1px solid #d4ebd4; text-align: right;">
+            
+            <div style="text-align: center; margin-bottom: 30px; border-bottom: 2px solid #e2efe2; padding-bottom: 15px;">
+                <div style="font-size: 2.5rem; color: #2b583f; margin-bottom: 10px;"><i class="fa-solid fa-clinic-medical"></i></div>
+                <h2 style="color: #2b583f; margin: 0; font-size: 1.6rem;">سجل المرضى حسب الصيدليات</h2>
+                <p style="color: #666; font-size: 0.9rem; margin-top: 5px;">عرض قائمة المرضى المضافين لكل صيدلية بالتسلسل الخاص بها</p>
+            </div>
+
+            <div id="pharmaciesListContainer">
+                <p style="text-align: center; color: #888;">جاري تحميل البيانات...</p>
+            </div>
+
+            <div style="text-align: center; margin-top: 30px;">
+                <a href="ph.html" style="background: #2b583f; color: white; text-decoration: none; padding: 10px 25px; border-radius: 20px; font-weight: bold; display: inline-block;">العودة للصفحة الرئيسية</a>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const container = document.getElementById('pharmaciesListContainer');
+            const currentPharmacy = localStorage.getItem('pharmacyName') || 'صيدلية عامة / غير محددة';
+            const currentPatient = JSON.parse(localStorage.getItem('currentPatient'));
+
+            const pharmacyData = {};
+            if (currentPatient && currentPatient.name) {
+                pharmacyData[currentPharmacy] = [currentPatient];
+            }
+
+            const pharmacyNames = Object.keys(pharmacyData);
+
+            if (pharmacyNames.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 30px; background: #f9fbf9; border-radius: 12px; border: 1px dashed #d4ebd4; color: #777;">
+                        <i class="fa-solid fa-folder-open" style="font-size: 2rem; color: #a5d6a5; margin-bottom: 10px;"></i>
+                        <p style="margin: 0; font-weight: bold;">لا يوجد مرضى مسجلون حالياً في أي صيدلية.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = '';
+
+            pharmacyNames.forEach(pharmacy => {
+                const pharmacyBox = document.createElement('div');
+                pharmacyBox.style.cssText = 'background: #f0f7f4; border: 1px solid #d4ebd4; border-radius: 12px; padding: 20px; margin-bottom: 25px;';
+
+                let patientsHTML = '';
+                pharmacyData[pharmacy].forEach((patient, index) => {
+                    let medsHTML = '';
+                    if (patient.medicines && patient.medicines.length > 0) {
+                        medsHTML = '<ul style="padding-right: 20px; margin: 8px 0 0 0; color: #444; font-size: 0.9rem;">';
+                        patient.medicines.forEach(med => {
+                            medsHTML += `<li><b>${med.name}</b> - الجرعة: ${med.dose} (${med.time})</li>`;
+                        });
+                        medsHTML += '</ul>';
+                    }
+
+                    const serial = patient.serialId || ('MED-' + (1000 + index));
+
+                    patientsHTML += `
+                        <div style="background: #ffffff; border: 1px solid #e2efe2; padding: 15px; border-radius: 10px; margin-top: 10px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #d4ebd4; padding-bottom: 6px; margin-bottom: 6px;">
+                                <h4 style="color: #2b583f; margin: 0; font-size: 1.05rem;"><i class="fa-solid fa-user-injured"></i> ${patient.name}</h4>
+                                <span style="background: #2b583f; color: white; padding: 3px 8px; border-radius: 5px; font-size: 0.75rem; font-weight: bold;">${serial}</span>
+                            </div>
+                            <p style="margin: 4px 0; font-size: 0.9rem; color: #555;"><b>العمر:</b> ${patient.age} سنة</p>
+                            <p style="margin: 4px 0; font-size: 0.9rem; color: #555;"><b>الحالة الصحية:</b> ${patient.condition}</p>
+                            <div style="margin-top: 8px;">
+                                <span style="color: #2b583f; font-weight: bold; font-size: 0.9rem;">الأدوية المحددة:</span>
+                                ${medsHTML}
+                            </div>
+                        </div>
+                    `;
+                });
+
+                pharmacyBox.innerHTML = `
+                    <h3 style="color: #2b583f; margin: 0 0 15px 0; font-size: 1.2rem; border-bottom: 2px solid #d4ebd4; padding-bottom: 8px;">
+                        <i class="fa-solid fa-store"></i> صيدلية: ${pharmacy}
+                    </h3>
+                    ${patientsHTML}
+                `;
+
+                container.appendChild(pharmacyBox);
+            });
+        });
+
+        function logoutOwner() {
+            sessionStorage.removeItem('isOwnerPassed');
+            alert('تم إغلاق اللوحة بنجاح.');
+            window.location.href = 'ph.html';
+        }
+    </script>
+</body>
+</html>

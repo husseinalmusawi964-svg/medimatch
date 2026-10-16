@@ -1,0 +1,412 @@
+ 
+        body {
+            margin: 0%;
+        }
+
+        .heho {
+            background-color: rgb(63, 107, 68);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10xp 50px;font-family: "Libre Baskerville", serif;
+  font-optical-sizing: auto;
+  font-weight: <weight>;
+  font-style: normal;
+
+            
+
+}
+            
+        
+
+        .soso {width: 150px; 
+    }
+    
+    
+
+        .fofo a{
+    color: rgba(76, 190, 56, 0.982);
+padding: 5px 15px;
+text-decoration: none ;
+ border-radius:  15px;}
+ 
+ 
+.fofo a:hover{color: darkgreen;
+    background-color: rgb(89, 133, 94);}
+    .fofo button{ 
+background-color: rgb(55, 71, 129);
+color:rgb(18, 179, 50);
+border: none;
+padding: 5px 15px;
+border-radius:   15px
+
+}
+.fofo button:hover{ 
+    background-color: rgb(74, 90, 148);
+}
+hero-section {
+    background: linear-gradient(135deg, #f4f9f4 0%, #e2efe2 100%);
+    padding: 80px 20px;
+    text-align: center;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.hero-content {
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+.hero-section h1 {
+    color: #2b583f;
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+}
+
+.hero-section p {
+    color: #555;
+    font-size: 1.1rem;
+    line-height: 1.6;
+    margin-bottom: 30px;
+}
+
+.hero-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap; /* لجعل الأزرار متجاوبة على الشاشات الصغيرة */
+}
+
+.btn-primary {
+    background-color: #3b7a57;
+    color: white;
+    padding: 12px 25px;
+    border-radius: 25px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: #2b583f;
+}
+
+.btn-secondary {
+    background-color: transparent;
+    color: #3b7a57;
+    border: 2px solid #3b7a57;
+    padding: 12px 25px;
+    border-radius: 25px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.btn-secondary:hover {
+    background-color: #3b7a57;
+    color: white;
+}
+
+/* تنسيقات أقسام الصفحة الإضافية */
+.features-section {
+    padding: 60px 20px;
+    background-color: #ffffff;
+    text-align: center;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.features-section h2 {
+    color: #2b583f;
+    font-size: 2rem;
+    margin-bottom: 40px;
+}
+
+.cards-grid {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    flex-wrap: wrap;
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+.card {
+    background: #f9fbf9;
+    border: 1px solid #e2efe2;
+    padding: 30px 20px;
+    border-radius: 12px;
+    width: 300px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(43, 88, 63, 0.1);
+}
+
+.card .icon {
+    font-size: 2.5rem;
+    margin-bottom: 15px;
+}
+
+.card h3 {
+    color: #3b7a57;
+    font-size: 1.3rem;
+    margin-bottom: 10px;
+}
+
+.card p {
+    color: #666;
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+/* خلفية الـ Hero Section بتدرجات من لون الهيدر */
+.hero-section {
+    /* دمجنا لون الهيدر الأخضر الداكن مع درجات أخضر فاتحة وناعمة */
+    background: linear-gradient(135deg, #2b583f 0%, #3b7a57 50%, #e2efe2 100%);
+    padding: 90px 20px;
+    text-align: center;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: white; /* تغيير لون النص الرئيسي ليظهر بوضوح مع الخلفية الداكنة */
+}
+
+.hero-content {
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+.hero-section h1 {
+    color: #ffffff; /* لون أبيض ناصع للعنوان البارز */
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.hero-section p {
+    color: #eaf2ed; /* أخضر فاتح جداً ومريح للعين للنص الفرعي */
+    font-size: 1.1rem;
+    line-height: 1.6;
+    margin-bottom: 30px;
+}
+
+.hero-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.btn-primary {
+    background-color: #ffffff;
+    color: #2b583f; /* عكسنا الألوان ليكون الزر بارزاً بلون الهيدر */
+    padding: 12px 25px;
+    border-radius: 25px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.btn-primary:hover {
+    background-color: #e2efe2;
+    transform: translateY(-2px);
+}
+
+.btn-secondary {
+    background-color: transparent;
+    color: #ffffff;
+    border: 2px solid #ffffff;
+    padding: 12px 25px;
+    border-radius: 25px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.btn-secondary:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #ffffff;
+}
+
+/* تنسيق قسم البطاقات (كيف يعمل النظام) ليتناسق مع الهيدر */
+.features-section {
+    padding: 60px 20px;
+    background-color: #f7fbf8; /* خلفية هادئة جداً تميل للأخضر الفاتح */
+    text-align: center;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.features-section h2 {
+    color: #2b583f; /* نفس لون الهيدر */
+    font-size: 2rem;
+    margin-bottom: 40px;
+}
+
+.cards-grid {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    flex-wrap: wrap;
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+.card {
+    background: #ffffff;
+    border: 1px solid #d4ebd4;
+    padding: 30px 20px;
+    border-radius: 12px;
+    width: 300px;
+    box-shadow: 0 4px 6px rgba(43, 88, 63, 0.04);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 15px rgba(43, 88, 63, 0.1);
+}
+
+.card .icon {
+    font-size: 2.5rem;
+    margin-bottom: 15px;
+}
+
+.card h3 {
+    color: #3b7a57;
+    font-size: 1.3rem;
+    margin-bottom: 10px;
+}
+
+.card p {
+    color: #555;
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+/* تنسيق حاضنة الأيقونات لتكون أنيقة وذات خلفية دافئة */
+.icon-container {
+    width: 70px;
+    height: 70px;
+    background-color: #e2efe2; /* خلفية خضراء فاتحة جداً */
+    color: #2b583f; /* لون الأيقونة بنفس درجة لون الهيدر */
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px auto;
+    font-size: 1.8rem;
+    transition: all 0.3s ease;
+}
+
+/* تأثير جمالي عند المرور بالماوس على البطاقة */
+.card:hover .icon-container {
+    background-color: #2b583f;
+    color: #ffffff;
+    transform: scale(1.1);
+}
+/* ==========================================================================
+   MediMatch - Form & File Upload Styling
+   ========================================================================== */
+
+/* كارت الدواء */
+.med-card {
+    background: #ffffff;
+    border: 1px solid #d4ebd4;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 12px rgba(43, 88, 63, 0.04);
+}
+
+/* تقسيم الحقول بالتساوي */
+.inputs-grid {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+}
+
+.custom-input {
+    flex: 1;
+    min-width: 140px;
+    padding: 10px 12px;
+    border: 1px solid #c8e3c8;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    outline: none;
+    box-sizing: border-box;
+}
+
+.custom-input:focus {
+    border-color: #2b583f;
+}
+
+/* خانة ارفاق الصورة المنسقة والأنيقة */
+.upload-container {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: #f0f7f4;
+    border: 1px dashed #2b583f;
+    padding: 10px 15px;
+    border-radius: 8px;
+    margin-top: 10px;
+}
+
+.upload-btn-stylish {
+    background-color: #2b583f;
+    color: #ffffff;
+    padding: 8px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-weight: bold;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+}
+
+.upload-btn-stylish:hover {
+    background-color: #1e3f2d;
+}
+
+.file-name-display {
+    font-size: 0.85rem;
+    color: #555;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.preview-img {
+    width: 40px;
+    height: 40px;
+    border-radius: 6px;
+    object-fit: cover;
+    display: none;
+    border: 1px solid #2b583f;
+}
+
+/* الأزرار الرئيسية */
+.btn-add-more {
+    background: #e2efe2;
+    color: #2b583f;
+    border: 1px solid #b2dbb2;
+    padding: 9px 18px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 0.9rem;
+}
+
+.btn-submit-main {
+    background: #2b583f;
+    color: #ffffff;
+    border: none;
+    padding: 13px 20px;
+    border-radius: 25px;
+    cursor: pointer;
+    width: 100%;
+    font-weight: bold;
+    font-size: 1rem;
+}

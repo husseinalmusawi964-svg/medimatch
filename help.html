@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediMatch - مركز المساعدة والدعم</title>
+    
+    <link rel="stylesheet" href="stiyel.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        body { 
+            background-color: #f4f7f5; 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            margin: 0; 
+            padding: 0; 
+        }
+        .help-container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+        .help-card {
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 8px 20px rgba(43, 88, 63, 0.08);
+            border: 1px solid #d4ebd4;
+            margin-bottom: 25px;
+        }
+        .help-card h3 {
+            color: #2b583f;
+            margin-top: 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.2rem;
+            border-bottom: 2px solid #eef3f0;
+            padding-bottom: 10px;
+        }
+        .help-card p, .help-card li {
+            color: #444;
+            line-height: 1.8;
+            font-size: 0.95rem;
+        }
+        .help-card ul {
+            padding-right: 20px;
+            margin: 10px 0;
+        }
+        .contact-box {
+            background: #f0f7f4;
+            border: 1px solid #d4ebd4;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            margin-top: 20px;
+        }
+        .contact-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #2b583f;
+            color: white;
+            padding: 10px 22px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: bold;
+            margin: 8px 5px;
+            transition: 0.3s;
+            font-size: 0.95rem;
+        }
+        .contact-btn:hover {
+            background: #1f3f2d;
+        }
+        .contact-btn.telegram {
+            background: #0088cc;
+        }
+        .contact-btn.telegram:hover {
+            background: #006699;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- الهيدر العلوي بدون زر Sign In -->
+    <div class="heho">
+        <a href="index.html"><img class="soso" src="imeg/IMG_9459.PNG" alt="Logo"></a>
+        <div class="fofo" id="navLinksContainer">
+            <a href="index.html">Home</a>
+            <a href="my-patients.html">My Patients</a>
+            <a href="add-patient.html">Add patient</a>
+            <a href="help.html" style="color: #2b583f; font-weight: bold;">Help</a>
+        </div>
+    </div>
+
+    <div class="help-container">
+        
+        <div style="text-align: center; margin-bottom: 30px;">
+            <h2 style="color: #2b583f; margin-bottom: 5px;"><i class="fa-solid fa-circle-question"></i> مركز المساعدة والدعم الفني</h2>
+            <p style="color: #666; font-size: 0.9rem;">دليل استخدام تطبيق MediMatch وتفعيل حسابات الصيدليات</p>
+        </div>
+
+        <!-- بطاقة الطلب والتواصل -->
+        <div class="help-card" style="border-color: #2b583f;">
+            <h3><i class="fa-solid fa-key" style="color: #2b583f;"></i> الحصول على رمز الصلاحية والدخول</h3>
+            <p style="font-weight: bold; color: #2b583f; font-size: 1.05rem; text-align: center;">
+                للحصول على رمز الدخول المعتمد وإنشاء حساب جديد للصيدلية، يرجى مراسلتنا عبر الوسائل التالية:
+            </p>
+            
+            <div class="contact-box">
+                <a href="tel:07803626607" class="contact-btn">
+                    <i class="fa-solid fa-phone"></i> 07803626607
+                </a>
+                
+                <a href="https://t.me/h3_gj" target="_blank" class="contact-btn telegram">
+                    <i class="fa-brands fa-telegram"></i> @h3_gj
+                </a>
+            </div>
+        </div>
+
+        <!-- بطاقة تعليمات الاستخدام -->
+        <div class="help-card">
+            <h3><i class="fa-solid fa-hospital-user"></i> إضافة وتعديل بيانات المرضى</h3>
+            <ul>
+                <li>من قائمة <b>Add patient</b>، أدخل اسم المريض الكامل، العمر، والحالة الصحية.</li>
+                <li>سجّل أية <b>حساسية للأدوية</b> إن وجدت لتظهر بشكل بارز ومحذر في البطاقة الرقمية.</li>
+                <li>أضف الأدوية والجرعات والتوقيتات مع إمكانية إرفاق صورة توضيحية لكل دواء.</li>
+                <li>عند حفظ السجل، سيتم توليد <b>QR Code</b> محمي وخفيف يمكن طباعته للمريض.</li>
+            </ul>
+        </div>
+
+        <!-- بطاقة الأمان والمزامنة -->
+        <div class="help-card">
+            <h3><i class="fa-solid fa-shield-halved"></i> الأمان وحفظ البيانات عبر الأجهزة</h3>
+            <p>عند تسجليك بالـ Username وكلمة المرور الخاصة بك من أي جهاز آخر (حاسبة، تابلت، أو هاتف)، سيقوم النظام بفتح قائمة المرضى الخاصة بصيدليتك تلقائياً ومزامنة كل التعديلات بشكل آمن ومشفر.</p>
+        </div>
+
+    </div>
+
+</body>
+</html>

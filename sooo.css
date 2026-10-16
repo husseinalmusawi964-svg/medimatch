@@ -1,0 +1,251 @@
+/* ==========================================================================
+   MediMatch - Patient View Card Stylesheet with Green Bar Theme (sooo.css)
+   ========================================================================== */
+
+/* 1. الثيم الأساسي والشريط الأخضر العلوي */
+body {
+    background-color: #f4f7f5;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    border-top: 6px solid #2b583f; /* الشريط الأخضر العلوي المميز للموقع */
+}
+
+.heho {
+    background-color: #ffffff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 40px;
+    box-shadow: 0 2px 10px rgba(43, 88, 63, 0.08);
+    border-bottom: 2px solid #d4ebd4;
+}
+
+.soso {
+    height: 50px;
+    width: auto;
+    object-fit: contain;
+}
+
+.fofo {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.fofo a {
+    color: #2b583f;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 0.95rem;
+    transition: color 0.2s;
+}
+
+.fofo a:hover {
+    color: #1e3f2d;
+}
+
+/* 2. الحاوية والبطاقة الرئيسية مع الشريط الأخضر الجانبي */
+.patient-view-container {
+    padding: 40px 20px;
+}
+
+.patient-card-main {
+    max-width: 680px;
+    margin: 0 auto;
+    background: #ffffff;
+    padding: 35px;
+    border-radius: 16px;
+    box-shadow: 0 8px 25px rgba(43, 88, 63, 0.08);
+    border: 1px solid #d4ebd4;
+    border-top: 5px solid #2b583f; /* شريط أخضر على رأس كارت المريض الرئيسي */
+    text-align: right;
+    position: relative;
+    overflow: hidden;
+}
+
+/* 3. رأس بطاقة المريض */
+.patient-card-header {
+    text-align: center;
+    margin-bottom: 25px;
+    border-bottom: 2px solid #e2efe2;
+    padding-bottom: 15px;
+}
+
+.patient-card-header i {
+    font-size: 2.3rem;
+    color: #2b583f;
+    margin-bottom: 8px;
+}
+
+.patient-card-header h2 {
+    color: #2b583f;
+    margin: 0;
+    font-size: 1.4rem;
+}
+
+.patient-card-header p {
+    color: #666666;
+    font-size: 0.85rem;
+    margin-top: 5px;
+}
+
+/* 4. صندوق معلومات المريض والتسلسل */
+.patient-info-box {
+    background: #f0f7f4;
+    padding: 20px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    border: 1px solid #d4ebd4;
+    border-right: 5px solid #2b583f; /* شريط أخضر جانبي لتمييز معلومات المريض */
+}
+
+.serial-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    border-bottom: 1px dashed #d4ebd4;
+    padding-bottom: 8px;
+}
+
+.serial-badge {
+    background: #2b583f;
+    color: #ffffff;
+    padding: 4px 12px;
+    border-radius: 6px;
+    font-weight: bold;
+    font-size: 0.9rem;
+}
+
+.patient-detail-text {
+    margin: 6px 0;
+    color: #2b583f;
+    font-size: 1.05rem;
+}
+
+.patient-detail-text span {
+    color: #333333;
+}
+
+.med-section-title {
+    color: #2b583f;
+    font-size: 1.15rem;
+    margin-bottom: 15px;
+}
+
+/* 5. تصميم مستطيل الدواء المدمج مع شريط أخضر جانبي (صورة + اسم + جرعة + وقت) */
+.med-view-card {
+    background: #ffffff;
+    border: 1px solid #d4ebd4;
+    border-right: 6px solid #2b583f; /* الشريط الأخضر الجانبي لكل مستطيل دواء */
+    padding: 15px 18px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    margin-bottom: 15px;
+    box-shadow: 0 4px 12px rgba(43, 88, 63, 0.05);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.med-view-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(43, 88, 63, 0.12);
+}
+
+/* صورة الدواء الكبيرة والواضحة داخل المستطيل */
+.med-img-thumb {
+    width: 95px;
+    height: 95px;
+    border-radius: 10px;
+    object-fit: cover;
+    border: 2px solid #2b583f;
+    background: #f9fdf9;
+    box-shadow: 0 3px 8px rgba(43, 88, 63, 0.12);
+    flex-shrink: 0;
+}
+
+/* تفاصيل الدواء */
+.med-details-box {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.med-name-text {
+    color: #2b583f;
+    font-size: 1.15rem;
+    font-weight: bold;
+}
+
+.med-meta-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-top: 2px;
+}
+
+.med-dose-text {
+    color: #444444;
+    font-size: 0.95rem;
+    background: #f4f7f5;
+    padding: 4px 10px;
+    border-radius: 6px;
+    border: 1px solid #e2efe2;
+}
+
+.med-time-badge {
+    background: #f0f7f4;
+    color: #2b583f;
+    padding: 4px 12px;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: bold;
+    border: 1px solid #d4ebd4;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+/* 6. زر الطباعة */
+.print-btn-container {
+    text-align: center;
+    margin-top: 25px;
+}
+
+.btn-print-card {
+    background: #2b583f;
+    color: #ffffff;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 25px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 1rem;
+    transition: background 0.2s;
+    box-shadow: 0 4px 10px rgba(43, 88, 63, 0.2);
+}
+
+.btn-print-card:hover {
+    background: #1e3f2d;
+}
+
+/* 7. التجاوب والطباعة */
+@media (max-width: 600px) {
+    .heho {
+        padding: 10px 15px;
+    }
+
+    .med-view-card {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .med-details-box {
+        align-items: center;
+    }
+
+    .med-meta-row {

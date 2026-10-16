@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medimatch</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400..700;1,400..700&family=Oswald:wght@200..700&display=swap" rel="stylesheet"> 
+    <link rel="stylesheet" href="stiyel.css">
+</head>
+<body>
+    
+    <div class="heho">
+        <a href="ph.html"><img class="soso" src="imeg/IMG_9459.PNG" alt="Logo"></a>
+        <div class="fofo">
+            <a href="ph.html">Home</a>
+            <a href="my-patients.html" id="nav-my-patients" style="display: none;">My Patients</a>
+            <a href="#" onclick="handleAddPatientClick(event)">Add patient</a>
+            <a href="help.html">Help</a>
+            <a href="signin.html" id="nav-signin-btn"><button>Sign in</button></a>
+            <div id="user-profile-badge" style="display: none; align-items: center; gap: 10px;">
+                <span style="color: #2b583f; font-weight: bold;"><i class="fa-solid fa-user-doctor"></i> <span id="nav-user-name"></span></span>
+                <button onclick="logout()" style="background: #d9534f; color: white; border: none; padding: 5px 12px; border-radius: 15px; cursor: pointer; font-size: 0.85rem;">خروج</button>
+            </div>
+        </div>
+    </div>
+
+    <div>
+        <section class="hero-section">
+            <div class="hero-content">
+                <h1>بطاقتك الدوائية الرقمية.. أمان وسهولة بلمسة واحدة</h1>
+                <p>نظم أدوية الأمراض المزمنة الخاصة بك أو بأحبائك، واحصل على رمز QR فوري يضم خطتك العلاجية لتسهيل الطباعة والاستخدام في حالات الطوارئ.</p>
+                <div class="hero-buttons">
+                    <a href="#" onclick="handleAddPatientClick(event)" class="btn-primary">ابدأ بإضافة الأدوية الآن</a>
+                    <a href="#how-it-works" class="btn-secondary">كيف يعمل النظام؟</a>
+                </div>
+            </div>
+        </section>
+
+        <section id="how-it-works" class="features-section">
+            <div class="container">
+                <h2>كيف يعمل نظام MediMatch؟</h2>
+                <div class="cards-grid">
+                    <div class="card">
+                        <div class="icon-container"><i class="fa-solid fa-file-medical"></i></div>
+                        <h3>1. أضف البيانات</h3>
+                        <p>أدخل بيانات المريض وأسماء الأدوية المزمنة والجرعات بكل سهولة.</p>
+                    </div>
+                    <div class="card">
+                        <div class="icon-container"><i class="fa-solid fa-qrcode"></i></div>
+                        <h3>2. ولّد الـ QR</h3>
+                        <p>أنشئ رمز الاستجابة السريعة (QR Code) المرتبط بالملف الطبي فوراً.</p>
+                    </div>
+                    <div class="card">
+                        <div class="icon-container"><i class="fa-solid fa-print"></i></div>
+                        <h3>3. اطبع واحفظ</h3>
+                        <p>اطبع البطاقة أو احفظها في محفظتك لاستخدامها عند الحاجة أو الطوارئ.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const isAuth = localStorage.getItem('isAuthorizedDoctor') === 'true';
+            const docName = localStorage.getItem('doctorName');
+            const signinBtn = document.getElementById('nav-signin-btn');
+            const profileBadge = document.getElementById('user-profile-badge');
+            const userNameSpan = document.getElementById('nav-user-name');
+            const myPatientsLink = document.getElementById('nav-my-patients');
+
+            if (isAuth && docName) {
+                if (signinBtn) signinBtn.style.display = 'none';
+                if (profileBadge) profileBadge.style.display = 'flex';
+                if (userNameSpan) userNameSpan.textContent = docName;
+                if (myPatientsLink) myPatientsLink.style.display = 'inline-block';
+            }
+        });
+
+        function handleAddPatientClick(e) {
+            e.preventDefault();
+            const isAuthorized = localStorage.getItem('isAuthorizedDoctor') === 'true';
+
+            if (isAuthorized) {
+                window.location.href = 'add-patient.html';
+            } else {
+                alert('⚠️ يرجى تسجيل الدخول وإدخال رمز التوثيق أولاً لإضافة بيانات المرضى.');
+                window.location.href = 'signin.html';
+            }
+        }
+
+        function logout() {
+            localStorage.clear();
+            window.location.reload();
+        }
+    </script>
+</body>
+</html>
