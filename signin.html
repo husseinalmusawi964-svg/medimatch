@@ -3,36 +3,94 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MediMatch - تسجيل الدخول السحابي</title>
+    <title>MediMatch - تسجيل الدخول ومزامنة الحسابات</title>
     
     <link rel="stylesheet" href="stiyel.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- مكتبات Firebase السحابية -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
-
     <style>
-        body { background-color: #f4f7f5; font-family: 'Segoe UI', Tahoma, sans-serif; margin: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
-        .auth-card { background: #fff; width: 100%; max-width: 480px; padding: 35px; border-radius: 18px; box-shadow: 0 10px 30px rgba(43,88,63,0.12); border: 1px solid #d4ebd4; }
-        .tab-btns { display: flex; margin-bottom: 25px; border-bottom: 2px solid #eef3f0; }
-        .tab-btn { flex: 1; padding: 12px; background: none; border: none; font-size: 1rem; font-weight: bold; cursor: pointer; color: #666; }
-        .tab-btn.active { color: #2b583f; border-bottom: 3px solid #2b583f; margin-bottom: -2px; }
+        body { 
+            background-color: #f4f7f5; 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            margin: 0; 
+            padding: 0; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            min-height: 100vh; 
+        }
+        .auth-card { 
+            background: #ffffff; 
+            width: 100%; 
+            max-width: 480px; 
+            padding: 35px; 
+            border-radius: 18px; 
+            box-shadow: 0 10px 30px rgba(43, 88, 63, 0.12); 
+            border: 1px solid #d4ebd4; 
+        }
+        .tab-btns { 
+            display: flex; 
+            margin-bottom: 25px; 
+            border-bottom: 2px solid #eef3f0; 
+        }
+        .tab-btn { 
+            flex: 1; 
+            padding: 12px; 
+            background: none; 
+            border: none; 
+            font-size: 1rem; 
+            font-weight: bold; 
+            cursor: pointer; 
+            color: #666; 
+            transition: 0.3s; 
+        }
+        .tab-btn.active { 
+            color: #2b583f; 
+            border-bottom: 3px solid #2b583f; 
+            margin-bottom: -2px; 
+        }
         .form-section { display: none; }
         .form-section.active { display: block; }
         .input-group { margin-bottom: 15px; text-align: right; }
         .input-group label { display: block; margin-bottom: 5px; color: #2b583f; font-weight: bold; font-size: 0.9rem; }
-        .input-group input { width: 100%; padding: 12px 14px; background: #fafcfb; border: 1px solid #cce5cc; border-radius: 8px; box-sizing: border-box; }
-        .btn-submit { background: #2b583f; color: white; border: none; width: 100%; padding: 13px; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        .input-group input { 
+            width: 100%; 
+            padding: 12px 14px; 
+            background: #fafcfb; 
+            border: 1px solid #cce5cc; 
+            color: #222; 
+            border-radius: 8px; 
+            font-size: 0.95rem; 
+            box-sizing: border-box; 
+        }
+        .input-group input:focus { 
+            border-color: #2b583f; 
+            outline: none; 
+            background: #fff;
+            box-shadow: 0 0 5px rgba(43, 88, 63, 0.2);
+        }
+        .btn-submit { 
+            background: #2b583f; 
+            color: white; 
+            border: none; 
+            width: 100%; 
+            padding: 13px; 
+            border-radius: 8px; 
+            font-weight: bold; 
+            font-size: 1rem; 
+            cursor: pointer; 
+            margin-top: 10px; 
+            transition: 0.2s; 
+        }
+        .btn-submit:hover { background: #1f3f2d; }
     </style>
 </head>
 <body>
 
     <div class="auth-card">
         <div style="text-align: center; margin-bottom: 20px;">
-            <img src="imeg/IMG_9459.PNG" alt="Logo" style="width: 75px;">
+            <img src="imeg/IMG_9459.PNG" alt="Logo" style="width: 75px; height: 75px; object-fit: contain;">
             <h2 style="color: #2b583f; margin: 10px 0 5px 0;">نظام MediMatch الطبي</h2>
-            <p style="color: #666; font-size: 0.85rem;">مزامنة سحابية فورية عبر GitHub</p>
+            <p style="color: #666; font-size: 0.85rem;">بوابة إدارة الصيدليات والمرضى السحابية</p>
         </div>
 
         <div class="tab-btns">
@@ -40,75 +98,81 @@
             <button class="tab-btn" onclick="switchTab('signup')">إنشاء حساب جديد</button>
         </div>
 
+        <!-- قسم تسجيل الدخول -->
         <div id="signinSection" class="form-section active">
-            <form onsubmit="handleCloudLogin(event)">
+            <form id="loginForm">
                 <div class="input-group">
-                    <label><i class="fa-solid fa-at"></i> اسم المستخدم (Username):</label>
-                    <input type="text" id="loginUsername" required placeholder="dr_ahmed">
+                    <label><i class="fa-solid fa-envelope"></i> البريد الإلكتروني:</label>
+                    <input type="email" id="loginEmail" required placeholder="name@example.com">
                 </div>
                 <div class="input-group">
                     <label><i class="fa-solid fa-key"></i> كلمة المرور:</label>
                     <input type="password" id="loginPassword" required placeholder="••••••••">
                 </div>
-                <button type="submit" class="btn-submit">دخول سحابي إلى لوحة التحكم</button>
+                <button type="submit" class="btn-submit">دخول إلى لوحة التحكم</button>
             </form>
         </div>
 
+        <!-- قسم إنشاء حساب جديد -->
         <div id="signupSection" class="form-section">
-            <form onsubmit="handleCloudRegister(event)">
-                <div class="input-group">
-                    <label><i class="fa-solid fa-shield-halved"></i> رمز الصلاحية (الرمز):</label>
-                    <input type="password" id="regMasterKey" required placeholder="رمز التسجيل السري">
+            <form id="registerForm">
+                <!-- رمز الصلاحية -->
+                <div class="input-group" style="background: #f0f7f4; padding: 12px; border-radius: 10px; border: 1px dashed #2b583f;">
+                    <label style="color: #2b583f;"><i class="fa-solid fa-shield-halved" style="color: #b22222;"></i> رمز الصلاحية المعتمد:</label>
+                    <input type="password" id="regMasterKey" required placeholder="أدخل رمز التسجيل السري" style="border-color: #f5c6cb; background: #fffdfd;">
                 </div>
+
                 <div class="input-group">
                     <label><i class="fa-solid fa-envelope"></i> البريد الإلكتروني:</label>
                     <input type="email" id="regEmail" required placeholder="name@example.com">
                 </div>
+
                 <div class="input-group">
-                    <label><i class="fa-solid fa-user-doctor"></i> اسم الطبيب / الصيدلاني:</label>
+                    <label><i class="fa-solid fa-user"></i> اسم الطبيب / الصيدلي:</label>
                     <input type="text" id="regName" required placeholder="د. أحمد محمد">
                 </div>
+
                 <div class="input-group">
                     <label><i class="fa-solid fa-hospital"></i> اسم الصيدلية:</label>
-                    <input type="text" id="regPharmacy" required placeholder="صيدلية الشفاء">
+                    <input type="text" id="regPharmacy" required placeholder="صيدلية الشفاء المركزية">
                 </div>
+
                 <div class="input-group">
-                    <label><i class="fa-solid fa-at"></i> يوزر نيم (Username):</label>
-                    <input type="text" id="regUsername" required placeholder="dr_ahmed">
-                </div>
-                <div class="input-group">
-                    <label><i class="fa-solid fa-lock"></i> الرمز السري:</label>
+                    <label><i class="fa-solid fa-lock"></i> الرمز السري للحساب:</label>
                     <input type="password" id="regAccountPass" required placeholder="••••••••">
                 </div>
-                <div class="input-group">
-                    <label><i class="fa-solid fa-lock-open"></i> تأكيد الرمز:</label>
-                    <input type="password" id="regAccountPassConfirm" required placeholder="••••••••">
-                </div>
-                <button type="submit" class="btn-submit">إنشاء وتفعيل الحساب سحابياً</button>
+
+                <button type="submit" class="btn-submit">إنشاء الحساب وبدء العمل</button>
             </form>
         </div>
     </div>
 
-    <script>
-        // إعدادات مشروعك المباشرة في Firebase (madimatch)
+    <!-- كود ربط وتفعيل Firebase Authentication و Firestore -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-firestore.js";
+
         const firebaseConfig = {
             apiKey: "AIzaSyDrVLbKYdOZjZwo4ZpTuT2mhhJNG_UQUYc",
             authDomain: "madimatch.firebaseapp.com",
             projectId: "madimatch",
             storageBucket: "madimatch.firebasestorage.app",
             messagingSenderId: "243542423910",
-            appId: "1:243542423910:web:d8082bc3a372a5557fb0a7",
-            measurementId: "G-EGM9Y42FZ7"
+            appId: "1:243542423910:web:98422e0330e2b8237fb0a7",
+            measurementId: "G-FT9NDV35BS"
         };
 
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
 
         const ADMIN_SECRET_REGISTRATION_KEY = "MED-PHARMACY-2026-KEY";
 
-        function switchTab(tab) {
+        window.switchTab = function(tab) {
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
             document.querySelectorAll('.form-section').forEach(s => s.classList.remove('active'));
+
             if (tab === 'signin') {
                 document.querySelectorAll('.tab-btn')[0].classList.add('active');
                 document.getElementById('signinSection').classList.add('active');
@@ -118,56 +182,73 @@
             }
         }
 
-        async function hashPassword(pass) {
-            const buffer = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(pass));
-            return Array.from(new Uint8Array(buffer)).map(b => b.toString(16).padStart(2, '0')).join('');
-        }
-
-        async function handleCloudRegister(e) {
+        // معالجة إنشاء حساب جديد
+        document.getElementById('registerForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            const masterKey = document.getElementById('regMasterKey').value.trim();
+            const inputMasterKey = document.getElementById('regMasterKey').value.trim();
             const email = document.getElementById('regEmail').value.trim();
             const fullName = document.getElementById('regName').value.trim();
             const pharmacyName = document.getElementById('regPharmacy').value.trim();
-            let username = document.getElementById('regUsername').value.trim().toLowerCase().replace(/^@/, '');
-            const rawPass = document.getElementById('regAccountPass').value;
-            const confirmPass = document.getElementById('regAccountPassConfirm').value;
+            const password = document.getElementById('regAccountPass').value;
 
-            if (rawPass !== confirmPass) { alert('⚠️ الرمز السري غير متطابق!'); return; }
-            if (masterKey !== ADMIN_SECRET_REGISTRATION_KEY) { alert('❌ رمز الصلاحية غير صحيح!'); return; }
-
-            const userDoc = await db.collection('users').doc(username).get();
-            if (userDoc.exists) { alert('⚠️ اسم المستخدم مستخدم بالفعل!'); return; }
-
-            const passwordHash = await hashPassword(rawPass);
-            await db.collection('users').doc(username).set({
-                email, fullName, pharmacyName, username, passwordHash, createdAt: new Date()
-            });
-
-            localStorage.setItem('isAuthorizedDoctor', 'true');
-            localStorage.setItem('currentActiveUser', username);
-            alert('🎉 تم إنشاء الحساب سحابياً بنجاح!');
-            window.location.href = 'index.html';
-        }
-
-        async function handleCloudLogin(e) {
-            e.preventDefault();
-            let username = document.getElementById('loginUsername').value.trim().toLowerCase().replace(/^@/, '');
-            const rawPass = document.getElementById('loginPassword').value;
-
-            const userDoc = await db.collection('users').doc(username).get();
-            if (!userDoc.exists) { alert('❌ اسم المستخدم أو الرمز غير صحيح!'); return; }
-
-            const hashedInput = await hashPassword(rawPass);
-            if (userDoc.data().passwordHash === hashedInput) {
-                localStorage.setItem('isAuthorizedDoctor', 'true');
-                localStorage.setItem('currentActiveUser', username);
-                alert(`مرحباً بك د. ${userDoc.data().fullName}`);
-                window.location.href = 'index.html';
-            } else {
-                alert('❌ اسم المستخدم أو الرمز غير صحيح!');
+            if (inputMasterKey !== ADMIN_SECRET_REGISTRATION_KEY) {
+                alert('❌ خطأ أمني: رمز الصلاحية المعتمد غير صحيح!');
+                return;
             }
-        }
+
+            try {
+                // 1. إنشاء الحساب في Firebase Auth
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                const user = userCredential.user;
+
+                // 2. حفظ بيانات إضافية للصيدلي في Firestore
+                await setDoc(doc(db, "doctors", user.uid), {
+                    fullName: fullName,
+                    pharmacyName: pharmacyName,
+                    email: email,
+                    createdAt: new Date()
+                });
+
+                localStorage.setItem('isAuthorizedDoctor', 'true');
+                localStorage.setItem('doctorName', fullName);
+                
+                alert('🎉 تم إنشاء الحساب بنجاح!');
+                window.location.href = 'ph.html';
+            } catch (error) {
+                console.error(error);
+                alert('⚠️ حدث خطأ أثناء إنشاء الحساب: ' + error.message);
+            }
+        });
+
+        // معالجة تسجيل الدخول
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value.trim();
+            const password = document.getElementById('loginPassword').value;
+
+            try {
+                const userCredential = await signInWithEmailAndPassword(auth, email, password);
+                const user = userCredential.user;
+
+                // جلب اسم الطبيب من Firestore
+                const docRef = doc(db, "doctors", user.uid);
+                const docSnap = await getDoc(docRef);
+
+                let docName = "الصيدلي";
+                if (docSnap.exists()) {
+                    docName = docSnap.data().fullName;
+                }
+
+                localStorage.setItem('isAuthorizedDoctor', 'true');
+                localStorage.setItem('doctorName', docName);
+
+                alert(`مرحباً بك مجدداً د. ${docName}`);
+                window.location.href = 'ph.html';
+            } catch (error) {
+                console.error(error);
+                alert('❌ البريد الإلكتروني أو كلمة المرور غير صحيحة!');
+            }
+        });
     </script>
 </body>
 </html>

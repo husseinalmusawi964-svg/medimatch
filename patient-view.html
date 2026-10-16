@@ -3,17 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MediMatch - البطاقة الدوائية الرقمية</title>
+    <title>MediMatch - البطاقة الدوائية للمريض</title>
     
+    <link rel="stylesheet" href="stiyel.css">
     <link rel="stylesheet" href="sooo.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- مكتبات Firebase المطلوبة -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
 </head>
-<body style="background-color: #f4f7f5; font-family: sans-serif; margin: 0; padding: 0;">
+<body style="background-color: #f4f7f5; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0;">
 
+    <!-- الهيدر الخاص بالعامة والمريض -->
     <div class="heho">
         <a href="index.html"><img class="soso" src="imeg/IMG_9459.PNG" alt="Logo"></a>
         <div class="fofo">
@@ -22,70 +20,123 @@
         </div>
     </div>
 
-    <div style="max-width: 700px; margin: 30px auto; padding: 0 15px;">
-        <div style="background: #fff; border-radius: 16px; padding: 25px; border: 1px solid #d4ebd4; box-shadow: 0 8px 20px rgba(0,0,0,0.05);">
-            <div style="text-align: center; margin-bottom: 20px;">
+    <div class="patient-view-container" style="max-width: 750px; margin: 30px auto; padding: 0 15px;">
+        <div class="patient-card-main" style="background: #fff; border-radius: 16px; padding: 25px; box-shadow: 0 8px 25px rgba(43,88,63,0.1); border: 1px solid #d4ebd4;">
+            
+            <div class="patient-card-header" style="text-align: center; margin-bottom: 20px; border-bottom: 2px dashed #eef3f0; padding-bottom: 15px;">
                 <i class="fa-solid fa-id-card-clip" style="font-size: 2.5rem; color: #2b583f;"></i>
-                <h2 style="color: #2b583f; margin: 8px 0;">البطاقة الدوائية الرقمية</h2>
+                <h2 style="color: #2b583f; margin: 8px 0 4px 0;">البطاقة الدوائية الرقمية</h2>
+                <p style="color: #666; font-size: 0.88rem; margin: 0;">ملف الأمراض المزمنة والخطة العلاجية المعتمدة</p>
             </div>
 
-            <div style="background: #f0f7f4; padding: 18px; border-radius: 12px; border: 1px solid #d4ebd4; margin-bottom: 20px;">
-                <p><strong>اسم المريض:</strong> <span id="viewName">جاري الجلب من السحابة...</span></p>
-                <p><strong>العمر:</strong> <span id="viewAge">-</span></p>
-                <p><strong>الحالة الصحية:</strong> <span id="viewCondition">-</span></p>
-                <p style="color: #b22222;"><strong>حساسية الأدوية:</strong> <span id="viewAllergies">-</span></p>
+            <!-- معلومات المريض الأساسية -->
+            <div class="patient-info-box" style="background: #f0f7f4; padding: 18px; border-radius: 12px; border: 1px solid #d4ebd4; margin-bottom: 20px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                    <span style="color: #2b583f; font-weight: bold;"><i class="fa-solid fa-hashtag"></i> الرقم التسلسلي:</span>
+                    <span id="viewPatientSerial" style="background: #2b583f; color: white; padding: 4px 12px; border-radius: 20px; font-weight: bold; font-size: 0.9rem;">-</span>
+                </div>
+                <p style="margin: 8px 0; color: #333;"><strong>اسم المريض:</strong> <span id="viewPatientName" style="color: #2b583f; font-weight: bold;">جاري التحميل...</span></p>
+                <p style="margin: 8px 0; color: #333;"><strong>العمر:</strong> <span id="viewPatientAge">-</span></p>
+                <p style="margin: 8px 0; color: #333;"><strong>الحالة الصحية / الأمراض المزمنة:</strong> <span id="viewPatientCondition">-</span></p>
+                
+                <div style="margin-top: 12px; padding: 10px 14px; background: #fff0f0; border-right: 4px solid #d9534f; border-radius: 6px;">
+                    <strong style="color: #d9534f;"><i class="fa-solid fa-triangle-exclamation"></i> حساسية الأدوية:</strong> 
+                    <span id="viewPatientAllergies" style="color: #b22222; font-weight: bold;">-</span>
+                </div>
             </div>
 
-            <h3 style="color: #2b583f;"><i class="fa-solid fa-pills"></i> الجدول الدوائي:</h3>
-            <div id="viewMeds"></div>
+            <!-- قائمة الأدوية -->
+            <h3 style="color: #2b583f; font-size: 1.15rem; margin-bottom: 15px; border-bottom: 2px solid #2b583f; padding-bottom: 6px; display: flex; align-items: center; gap: 8px;">
+                <i class="fa-solid fa-pills"></i> الأدوية والتعليمات الدوائية:
+            </h3>
+            
+            <div id="viewMedicinesContainer" style="margin-bottom: 25px;"></div>
+
+            <div style="text-align: center; border-top: 1px dashed #d4ebd4; padding-top: 15px;">
+                <button onclick="window.print()" style="background: #2b583f; color: white; border: none; padding: 10px 25px; border-radius: 20px; font-weight: bold; cursor: pointer; font-size: 0.95rem;">
+                    <i class="fa-solid fa-print"></i> طباعة البطاقة
+                </button>
+            </div>
+
         </div>
     </div>
 
     <script>
-        const firebaseConfig = {
-            apiKey: "AIzaSyDrVLbKYdOZjZwo4ZpTuT2mhhJNG_UQUYc",
-            authDomain: "madimatch.firebaseapp.com",
-            projectId: "madimatch",
-            storageBucket: "madimatch.firebasestorage.app",
-            messagingSenderId: "243542423910",
-            appId: "1:243542423910:web:d8082bc3a372a5557fb0a7",
-            measurementId: "G-EGM9Y42FZ7"
-        };
+        document.addEventListener('DOMContentLoaded', () => {
+            let patientData = null;
 
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
-
-        document.addEventListener('DOMContentLoaded', async () => {
             const urlParams = new URLSearchParams(window.location.search);
-            const serialId = urlParams.get('id');
+            const idParam = urlParams.get('id');
+            const dataParam = urlParams.get('data');
 
-            if (!serialId) {
-                document.getElementById('viewName').textContent = 'عذراً، رابط غير صحيح!';
+            // 1. محاولة جلب البيانات مباشرةً من الرابط المضمن (Data URL) إن وُجدت
+            if (dataParam) {
+                try {
+                    patientData = JSON.parse(decodeURIComponent(dataParam));
+                } catch (e) {
+                    console.error("فشل فك تشفير البيانات المباشرة:", e);
+                }
+            }
+
+            // 2. البحث عن المريض بالرقم التسلسلي في قاعدة البيانات المحلية (إذا كان الفحص من نفس الجهاز)
+            if (!patientData && idParam) {
+                const allPatients = JSON.parse(localStorage.getItem('pharmacyPatientsList')) || [];
+                patientData = allPatients.find(p => p.serialId === idParam);
+
+                if (!patientData) {
+                    let allUsers = JSON.parse(localStorage.getItem('medimatch_secure_db')) || [];
+                    for (let u of allUsers) {
+                        if (u.patientsList) {
+                            let found = u.patientsList.find(p => p.serialId === idParam);
+                            if (found) { patientData = found; break; }
+                        }
+                    }
+                }
+            }
+
+            // 3. خيار المريض المحفوظ مؤقتاً
+            if (!patientData) {
+                patientData = JSON.parse(localStorage.getItem('currentPatient'));
+            }
+
+            // إذا تعذر الوصول لبيانات المريض من الجهاز الحالي
+            if (!patientData || !patientData.name) {
+                document.querySelector('.patient-card-main').innerHTML = `
+                    <div style="text-align: center; padding: 40px; color: #d9534f;">
+                        <i class="fa-solid fa-triangle-exclamation" style="font-size: 3.5rem; margin-bottom: 15px;"></i>
+                        <h3 style="margin: 0;">لم يتم العثور على سجل المريض على هذا الجهاز!</h3>
+                        <p style="color: #666; font-size: 0.9rem; margin-top: 10px; line-height: 1.6;">
+                            إذا قمت بمسح الـ QR من جهاز/هاتف جديد، يرجى استيراد بيانات الحساب عبر زر المزامنة في صفحة تسجيل الدخول أولاً، أو استخدام خيار الربط السحابي (Firebase).
+                        </p>
+                    </div>`;
                 return;
             }
 
-            const doc = await db.collection('patients').doc(serialId).get();
-            if (doc.exists) {
-                const data = doc.data();
-                document.getElementById('viewName').textContent = data.name;
-                document.getElementById('viewAge').textContent = data.age + ' سنة';
-                document.getElementById('viewCondition').textContent = data.condition;
-                document.getElementById('viewAllergies').textContent = data.allergies || 'لا توجد';
+            // عرض البيانات المجلوبة
+            document.getElementById('viewPatientSerial').textContent = patientData.serialId || 'MED-1001';
+            document.getElementById('viewPatientName').textContent = patientData.name;
+            document.getElementById('viewPatientAge').textContent = patientData.age + ' سنة';
+            document.getElementById('viewPatientCondition').textContent = patientData.condition;
+            document.getElementById('viewPatientAllergies').textContent = patientData.allergies || 'لا توجد حساسية مسجلة';
 
-                let html = '';
-                if (data.medicines && data.medicines.length > 0) {
-                    data.medicines.forEach((m, i) => {
-                        html += `
-                            <div style="background: #fafcfb; border: 1px solid #d4ebd4; padding: 10px; border-radius: 8px; margin-bottom: 8px;">
-                                <b>${i+1}. ${m.name}</b> - الجرعة: ${m.dose} - التوقيت: ${m.time}
-                            </div>`;
-                    });
-                } else {
-                    html = '<p>لا توجد أدوية مسجلة.</p>';
-                }
-                document.getElementById('viewMeds').innerHTML = html;
+            const medsContainer = document.getElementById('viewMedicinesContainer');
+            if (patientData.medicines && patientData.medicines.length > 0) {
+                let medsHtml = '';
+                patientData.medicines.forEach((med, idx) => {
+                    const medImg = (med.image && med.image.length > 20) ? med.image : 'imeg/IMG_9459.PNG';
+                    medsHtml += `
+                        <div style="display: flex; align-items: center; gap: 15px; background: #fafcfb; border: 1px solid #d4ebd4; padding: 12px 15px; border-radius: 10px; margin-bottom: 10px;">
+                            <img src="${medImg}" alt="${med.name}" style="width: 65px; height: 65px; object-fit: cover; border-radius: 8px; border: 1px solid #cce5cc;">
+                            <div style="flex: 1; text-align: right;">
+                                <div style="font-weight: bold; color: #2b583f; font-size: 1rem; margin-bottom: 4px;">${idx + 1}. ${med.name}</div>
+                                <div style="font-size: 0.88rem; color: #555;">الجرعة: <b>${med.dose}</b></div>
+                                <div style="font-size: 0.85rem; color: #2b583f; margin-top: 2px;"><i class="fa-regular fa-clock"></i> التوقيت: <b>${med.time}</b></div>
+                            </div>
+                        </div>`;
+                });
+                medsContainer.innerHTML = medsHtml;
             } else {
-                document.getElementById('viewName').textContent = 'لم يتم العثور على المريض بالسحابة!';
+                medsContainer.innerHTML = '<p style="color: #777; text-align: center; padding: 10px;">لا توجد أدوية مسجلة في هذا الملف.</p>';
             }
         });
     </script>
