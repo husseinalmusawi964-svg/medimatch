@@ -147,11 +147,10 @@
         </div>
     </div>
 
-    <!-- كود ربط وتفعيل Firebase Authentication و Firestore -->
+    <!-- ربط وتفعيل Firestore مباشرة لتخزين وحفظ الحسابات -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-auth.js";
-        import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, getDocs, query, where } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDrVLbKYdOZjZwo4ZpTuT2mhhJNG_UQUYc",
@@ -164,7 +163,6 @@
         };
 
         const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
         const db = getFirestore(app);
 
         const ADMIN_SECRET_REGISTRATION_KEY = "MED-PHARMACY-2026-KEY";
@@ -182,7 +180,15 @@
             }
         }
 
-        // معالجة إنشاء حساب جديد
+        // دالة تشفير كلمة المرور بـ SHA-256 لحمايتها
+        async function hashPassword(password) {
+            const msgBuffer = new TextEncoder().encode(password);
+            const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+        }
+
+        // معالجة إنشاء حساب جديد وحفظه في Firestore
         document.getElementById('registerForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const inputMasterKey = document.getElementById('regMasterKey').value.trim();
@@ -197,22 +203,30 @@
             }
 
             try {
-                // 1. إنشاء الحساب في Firebase Auth
-                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-                const user = userCredential.user;
+                // التحقق هل البريد مسجل مسبقاً
+                const q = query(collection(db, "doctors"), where("email", "==", email));
+                const querySnapshot = await getDocs(q);
+                
+                if (!querySnapshot.empty) {
+                    alert('⚠️ هذا البريد الإلكتروني مسجل مسبقاً!');
+                    return;
+                }
 
-                // 2. حفظ بيانات إضافية للصيدلي في Firestore
-                await setDoc(doc(db, "doctors", user.uid), {
+                const hashedPassword = await hashPassword(password);
+
+                // حفظ بيانات الصيدلي في جدول doctors على Firestore
+                await addDoc(collection(db, "doctors"), {
                     fullName: fullName,
                     pharmacyName: pharmacyName,
                     email: email,
+                    password: hashedPassword,
                     createdAt: new Date()
                 });
 
                 localStorage.setItem('isAuthorizedDoctor', 'true');
                 localStorage.setItem('doctorName', fullName);
                 
-                alert('🎉 تم إنشاء الحساب بنجاح!');
+                alert('🎉 تم إنشاء الحساب بنجاح وتم ربطه بالسحابة!');
                 window.location.href = 'ph.html';
             } catch (error) {
                 console.error(error);
@@ -220,33 +234,39 @@
             }
         });
 
-        // معالجة تسجيل الدخول
+        // معالجة تسجيل الدخول بالتحقق من Firestore
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const email = document.getElementById('loginEmail').value.trim();
             const password = document.getElementById('loginPassword').value;
 
             try {
-                const userCredential = await signInWithEmailAndPassword(auth, email, password);
-                const user = userCredential.user;
+                const hashedPassword = await hashPassword(password);
 
-                // جلب اسم الطبيب من Firestore
-                const docRef = doc(db, "doctors", user.uid);
-                const docSnap = await getDoc(docRef);
+                const q = query(
+                    collection(db, "doctors"), 
+                    where("email", "==", email), 
+                    where("password", "==", hashedPassword)
+                );
+                const querySnapshot = await getDocs(q);
 
-                let docName = "الصيدلي";
-                if (docSnap.exists()) {
-                    docName = docSnap.data().fullName;
+                if (!querySnapshot.empty) {
+                    let docName = "الصيدلي";
+                    querySnapshot.forEach((doc) => {
+                        docName = doc.data().fullName;
+                    });
+
+                    localStorage.setItem('isAuthorizedDoctor', 'true');
+                    localStorage.setItem('doctorName', docName);
+
+                    alert(`مرحباً بك مجدداً د. ${docName}`);
+                    window.location.href = 'ph.html';
+                } else {
+                    alert('❌ البريد الإلكتروني أو كلمة المرور غير صحيحة!');
                 }
-
-                localStorage.setItem('isAuthorizedDoctor', 'true');
-                localStorage.setItem('doctorName', docName);
-
-                alert(`مرحباً بك مجدداً د. ${docName}`);
-                window.location.href = 'ph.html';
             } catch (error) {
                 console.error(error);
-                alert('❌ البريد الإلكتروني أو كلمة المرور غير صحيحة!');
+                alert('❌ حدث خطأ أثناء تسجيل الدخول.');
             }
         });
     </script>
