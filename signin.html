@@ -147,7 +147,7 @@
         </div>
     </div>
 
-    <!-- ربط وتفعيل Firestore مباشرة لتخزين وحفظ الحسابات -->
+    <!-- ربط وتفعيل Firestore للتسجيل السحابي -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-app.js";
         import { getFirestore, collection, addDoc, getDocs, query, where } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-firestore.js";
@@ -180,7 +180,7 @@
             }
         }
 
-        // دالة تشفير كلمة المرور بـ SHA-256 لحمايتها
+        // دالة تشفير كلمة المرور بـ SHA-256
         async function hashPassword(password) {
             const msgBuffer = new TextEncoder().encode(password);
             const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
@@ -188,7 +188,7 @@
             return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
         }
 
-        // معالجة إنشاء حساب جديد وحفظه في Firestore
+        // إنشاء حساب جديد
         document.getElementById('registerForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const inputMasterKey = document.getElementById('regMasterKey').value.trim();
@@ -203,7 +203,6 @@
             }
 
             try {
-                // التحقق هل البريد مسجل مسبقاً
                 const q = query(collection(db, "doctors"), where("email", "==", email));
                 const querySnapshot = await getDocs(q);
                 
@@ -214,7 +213,6 @@
 
                 const hashedPassword = await hashPassword(password);
 
-                // حفظ بيانات الصيدلي في جدول doctors على Firestore
                 await addDoc(collection(db, "doctors"), {
                     fullName: fullName,
                     pharmacyName: pharmacyName,
@@ -226,15 +224,16 @@
                 localStorage.setItem('isAuthorizedDoctor', 'true');
                 localStorage.setItem('doctorName', fullName);
                 
-                alert('🎉 تم إنشاء الحساب بنجاح وتم ربطه بالسحابة!');
-                window.location.href = 'ph.html';
+                alert('🎉 تم إنشاء الحساب بنجاح!');
+                // التوجيه إلى الصفحة الرئيسية / لوحة التحكم الصحيحة
+                window.location.href = 'index.html';
             } catch (error) {
                 console.error(error);
                 alert('⚠️ حدث خطأ أثناء إنشاء الحساب: ' + error.message);
             }
         });
 
-        // معالجة تسجيل الدخول بالتحقق من Firestore
+        // تسجيل الدخول
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const email = document.getElementById('loginEmail').value.trim();
@@ -260,7 +259,8 @@
                     localStorage.setItem('doctorName', docName);
 
                     alert(`مرحباً بك مجدداً د. ${docName}`);
-                    window.location.href = 'ph.html';
+                    // التوجيه إلى الصفحة الرئيسية / لوحة التحكم الصحيحة
+                    window.location.href = 'index.html';
                 } else {
                     alert('❌ البريد الإلكتروني أو كلمة المرور غير صحيحة!');
                 }
