@@ -101,11 +101,10 @@
         </div>
     </div>
 
-    <!-- كود جافاسكريبت وربط Firebase مع ضغط الصور السريع -->
+    <!-- كود ربط Firestore الخفيف والتخزين السريع بدون التعليق -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-app.js";
         import { getFirestore, collection, addDoc, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-firestore.js";
-        import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-storage.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDrVLbKYdOZjZwo4ZpTuT2mhhJNG_UQUYc",
@@ -119,7 +118,6 @@
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
-        const storage = getStorage(app);
 
         document.addEventListener('DOMContentLoaded', async () => {
             const isAuth = localStorage.getItem('isAuthorizedDoctor');
@@ -178,59 +176,46 @@
             window.location.href = 'signin.html';
         }
 
-        // دالة ضغط الصورة تلقائياً لتقليل حجمها قبل الرفع لمنع تعليق الموقع
-        function compressImage(file, maxWidth = 800, quality = 0.7) {
-            return new Promise((resolve) => {
-                const reader = new FileReader();
-                reader.readAsDataURL(file);
-                reader.onload = (event) => {
-                    const img = new Image();
-                    img.src = event.target.result;
-                    img.onload = () => {
-                        const canvas = document.createElement('canvas');
-                        let width = img.width;
-                        let height = img.height;
-
-                        if (width > maxWidth) {
-                            height = Math.round((height * maxWidth) / width);
-                            width = maxWidth;
-                        }
-
-                        canvas.width = width;
-                        canvas.height = height;
-                        const ctx = canvas.getContext('2d');
-                        ctx.drawImage(img, 0, 0, width, height);
-
-                        canvas.toBlob((blob) => {
-                            resolve(new File([blob], file.name, { type: 'image/jpeg', lastModified: Date.now() }));
-                        }, 'image/jpeg', quality);
-                    };
-                };
-            });
-        }
-
-        window.previewImage = async function(fileInput) {
+        // تحويل خفيف وسريع جداً للصورة بدون الضغط على معالج الجهاز
+        window.previewImage = function(fileInput) {
             const container = fileInput.closest('.upload-container');
             const fileNameDisplay = container.querySelector('.file-name-display');
             const previewImg = container.querySelector('.preview-img');
+            const hiddenUrlInput = container.querySelector('.existing-img-url');
             const file = fileInput.files[0];
 
             if (file) {
-                fileNameDisplay.textContent = "جاري معالجة وضغط الصورة...";
-                const compressedFile = await compressImage(file);
-                
-                // تخزين الملف المضغوط مؤقتاً في input بدلاً من الملف الأصلي الضخم
-                const dataTransfer = new DataTransfer();
-                dataTransfer.items.add(compressedFile);
-                fileInput.files = dataTransfer.files;
-
-                fileNameDisplay.textContent = file.name;
+                fileNameDisplay.textContent = "جاري التحضير...";
                 const reader = new FileReader();
                 reader.onload = function(e) {
-                    previewImg.src = e.target.result;
-                    previewImg.style.display = 'block';
-                }
-                reader.readAsDataURL(compressedFile);
+                    const img = new Image();
+                    img.src = e.target.result;
+                    img.onload = function() {
+                        const canvas = document.createElement('canvas');
+                        const maxDim = 400; // حجم مصغر وممتاز للعرض السريع
+                        let w = img.width;
+                        let h = img.height;
+
+                        if (w > h) {
+                            if (w > maxDim) { h *= maxDim / w; w = maxDim; }
+                        } else {
+                            if (h > maxDim) { w *= maxDim / h; h = maxDim; }
+                        }
+
+                        canvas.width = w;
+                        canvas.height = h;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, w, h);
+
+                        // ضغط عالي يحول الصورة إلى نص خفيف لا يتجاوز 30KB
+                        const compressedBase64 = canvas.toDataURL('image/jpeg', 0.5);
+                        hiddenUrlInput.value = compressedBase64;
+                        previewImg.src = compressedBase64;
+                        previewImg.style.display = 'block';
+                        fileNameDisplay.textContent = file.name;
+                    };
+                };
+                reader.readAsDataURL(file);
             }
         }
 
@@ -266,13 +251,13 @@
             document.getElementById('medicines-inputs-container').appendChild(createMedCard());
         });
 
-        // عملية الحفظ والتخزين السحابي السريع
+        // حفظ البيانات فورياً وبسرعة فائقة
         document.getElementById('doctor-form').addEventListener('submit', async function(e) {
             e.preventDefault();
 
             const submitBtn = document.getElementById('submitBtn');
             submitBtn.disabled = true;
-            submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> جاري الحفظ والرفع السحابي...';
+            submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> جاري الحفظ السحابي...';
 
             try {
                 const name = document.getElementById('patientName').value.trim();
@@ -285,12 +270,103 @@
                 const medRows = document.querySelectorAll('.med-input-group');
                 
                 for (const row of medRows) {
-                    const fileInput = row.querySelector('.med-image-file');
-                    const file = fileInput.files[0];
-                    let imageUrl = row.querySelector('.existing-img-url').value;
+                    const imageUrl = row.querySelector('.existing-img-url').value;
 
-                    // رفع الصورة المضغوطة بسرعة عالية
-                    if (file) {
-                        const fileRef = ref(storage, `medicines_images/${Date.now()}_${file.name}`);
-                        const snapshot = await uploadBytes(fileRef, file);
-                        imageUrl = await getDownloadURL(snapshot
+                    medicines.push({
+                        name: row.querySelector('.med-name').value.trim(),
+                        dose: row.querySelector('.med-dose').value.trim(),
+                        time: row.querySelector('.med-time').value.trim(),
+                        image: imageUrl
+                    });
+                }
+
+                const patientData = {
+                    name,
+                    age,
+                    condition,
+                    allergies,
+                    medicines,
+                    updatedAt: new Date()
+                };
+
+                let patientDocId = editingId;
+
+                if (editingId) {
+                    await updateDoc(doc(db, "patients", editingId), patientData);
+                } else {
+                    patientData.createdAt = new Date();
+                    const docRef = await addDoc(collection(db, "patients"), patientData);
+                    patientDocId = docRef.id;
+                }
+
+                const baseUrl = window.location.href.replace(/\/[^/]*$/, '/');
+                const patientViewUrl = baseUrl + 'patient-view.html?id=' + patientDocId;
+
+                const qrContainer = document.getElementById('qrcode');
+                qrContainer.innerHTML = '';
+                
+                document.getElementById('qrcode-section').style.display = 'block';
+                document.getElementById('displaySerial').textContent = patientDocId;
+                document.getElementById('previewLink').href = patientViewUrl;
+
+                new QRCode(qrContainer, {
+                    text: patientViewUrl,
+                    width: 180,
+                    height: 180,
+                    correctLevel: QRCode.CorrectLevel.M
+                });
+
+                window.currentSavedPatient = { serialId: patientDocId, name, patientViewUrl };
+                alert('🎉 تم حفظ وتخزين بيانات المريض على السحابة بنجاح!');
+
+            } catch (error) {
+                console.error("خطأ أثناء الحفظ السحابي:", error);
+                alert('❌ حدث خطأ أثناء الحفظ: ' + error.message);
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fa-solid fa-qrcode"></i> حفظ وتوليد بطاقة الـ QR Code السحابية';
+            }
+        });
+
+        window.printQRCode = function() {
+            const pInfo = window.currentSavedPatient;
+            if (!pInfo) return;
+
+            const qrContainer = document.getElementById('qrcode');
+            const qrImg = qrContainer.querySelector('img') || qrContainer.querySelector('canvas');
+            const qrImgSrc = qrImg ? (qrImg.src || qrImg.toDataURL("image/png")) : '';
+
+            const printWindow = window.open('', '', 'width=600,height=600');
+            printWindow.document.write(`
+                <html lang="ar" dir="rtl">
+                <head>
+                    <title>طباعة بطاقة المريض - ${pInfo.name}</title>
+                    <style>
+                        body { font-family: sans-serif; text-align: center; padding: 20px; }
+                        .print-card { border: 2px solid #2b583f; padding: 20px; border-radius: 12px; display: inline-block; max-width: 300px; }
+                        h2 { color: #2b583f; margin-bottom: 5px; font-size: 1.2rem; }
+                        p { margin: 4px 0; color: #444; font-size: 0.9rem; }
+                        img { margin-top: 15px; border: 1px solid #d4ebd4; padding: 8px; border-radius: 8px; }
+                    </style>
+                </head>
+                <body>
+                    <div class="print-card">
+                        <h2>MediMatch - البطاقة الرقمية</h2>
+                        <p><strong>اسم المريض:</strong> ${pInfo.name}</p>
+                        <p><strong>المعرف السحابي:</strong> ${pInfo.serialId}</p>
+                        <img src="${qrImgSrc}" width="180" height="180">
+                        <p style="font-size: 0.75rem; color: #777; margin-top: 10px;">امسح الكود لعرض الجدول الدوائي من أي جهاز</p>
+                    </div>
+                </body>
+                </html>
+            `);
+            printWindow.document.close();
+            printWindow.focus();
+            setTimeout(() => {
+                printWindow.print();
+                printWindow.close();
+            }, 500);
+        }
+    </script>
+</body>
+</html>
