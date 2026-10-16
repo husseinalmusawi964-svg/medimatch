@@ -15,8 +15,26 @@
     <link rel="stylesheet" href="stiyel.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <style>
+        /* تحسينات التصميم المتجاوب للهواتف */
+        body { background-color: #f4f7f5; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; }
+        .main-container { max-width: 700px; margin: 20px auto; background: #fff; padding: 20px; border-radius: 16px; box-shadow: 0 8px 20px rgba(43, 88, 63, 0.08); border: 1px solid #d4ebd4; box-sizing: border-box; }
+        .custom-input { width: 100%; padding: 12px; border: 1px solid #cce5cc; border-radius: 8px; box-sizing: border-box; font-size: 0.95rem; background: #fff; }
+        .custom-input:focus { border-color: #2b583f; outline: none; box-shadow: 0 0 5px rgba(43, 88, 63, 0.2); }
+        
+        .row-group { display: flex; gap: 10px; margin-bottom: 12px; flex-wrap: wrap; }
+        .col-flex { flex: 1; min-width: 140px; }
+        
+        .med-grid { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 8px; margin-bottom: 10px; }
+        
+        @media (max-width: 600px) {
+            .main-container { margin: 10px; padding: 15px; border-radius: 12px; }
+            .med-grid { grid-template-columns: 1fr; gap: 8px; }
+            .row-group { flex-direction: column; gap: 10px; }
+        }
+    </style>
 </head>
-<body style="background-color: #f4f7f5; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0;">
+<body>
 
     <div class="heho">
         <a href="ph.html"><img class="soso" src="imeg/IMG_9459.PNG" alt="Logo"></a>
@@ -31,30 +49,30 @@
         </div>
     </div>
 
-    <div style="padding: 30px 20px;">
-        <div style="max-width: 700px; margin: 0 auto; background: #fff; padding: 30px; border-radius: 16px; box-shadow: 0 8px 20px rgba(43, 88, 63, 0.08); border: 1px solid #d4ebd4;">
+    <div style="padding: 10px;">
+        <div class="main-container">
             
-            <h2 id="pageTitle" style="color: #2b583f; margin-top: 0; margin-bottom: 20px; font-size: 1.4rem; text-align: right;">
+            <h2 id="pageTitle" style="color: #2b583f; margin-top: 0; margin-bottom: 15px; font-size: 1.3rem; text-align: right;">
                 <i class="fa-solid fa-user-plus"></i> إدخال بيانات المريض والأدوية
             </h2>
             
             <form id="doctor-form">
                 <input type="hidden" id="editingPatientId" value="">
 
-                <div style="background: #f0f7f4; padding: 18px; border-radius: 12px; border: 1px solid #d4ebd4; margin-bottom: 20px;">
-                    <div style="margin-bottom: 12px; text-align: right;">
+                <div style="background: #f0f7f4; padding: 15px; border-radius: 12px; border: 1px solid #d4ebd4; margin-bottom: 15px;">
+                    <div style="margin-bottom: 10px; text-align: right;">
                         <label style="display: block; margin-bottom: 5px; color: #2b583f; font-weight: bold; font-size: 0.9rem;">اسم المريض الكامل:</label>
-                        <input type="text" id="patientName" class="custom-input" style="width: 100%;" required placeholder="مثال: أحمد محمد">
+                        <input type="text" id="patientName" class="custom-input" required placeholder="مثال: أحمد محمد">
                     </div>
 
-                    <div style="display: flex; gap: 12px; text-align: right; margin-bottom: 12px;">
-                        <div style="flex: 1;">
+                    <div class="row-group" style="text-align: right;">
+                        <div class="col-flex" style="flex: 1;">
                             <label style="display: block; margin-bottom: 5px; color: #2b583f; font-weight: bold; font-size: 0.9rem;">العمر:</label>
-                            <input type="number" id="patientAge" class="custom-input" style="width: 100%;" required placeholder="مثال: 50">
+                            <input type="number" id="patientAge" class="custom-input" required placeholder="50">
                         </div>
-                        <div style="flex: 2;">
-                            <label style="display: block; margin-bottom: 5px; color: #2b583f; font-weight: bold; font-size: 0.9rem;">الحالة الصحية / الأمراض المزمنة:</label>
-                            <input type="text" id="patientCondition" class="custom-input" style="width: 100%;" required placeholder="مثال: سكري وضغط الدم">
+                        <div class="col-flex" style="flex: 2;">
+                            <label style="display: block; margin-bottom: 5px; color: #2b583f; font-weight: bold; font-size: 0.9rem;">الحالة الصحية:</label>
+                            <input type="text" id="patientCondition" class="custom-input" required placeholder="سكري وضغط الدم">
                         </div>
                     </div>
 
@@ -62,38 +80,38 @@
                         <label style="display: block; margin-bottom: 5px; color: #b22222; font-weight: bold; font-size: 0.9rem;">
                             <i class="fa-solid fa-triangle-exclamation"></i> حساسية الأدوية (إن وجدت):
                         </label>
-                        <input type="text" id="patientAllergies" class="custom-input" style="width: 100%; border-color: #f5c6cb; background: #fffdfd;" placeholder="مثال: حساسية من البنسلين...">
+                        <input type="text" id="patientAllergies" class="custom-input" style="border-color: #f5c6cb; background: #fffdfd;" placeholder="حساسية من البنسلين...">
                     </div>
                 </div>
 
-                <h3 style="color: #2b583f; font-size: 1.1rem; margin-bottom: 12px; text-align: right;">
+                <h3 style="color: #2b583f; font-size: 1.05rem; margin-bottom: 10px; text-align: right;">
                     <i class="fa-solid fa-pills"></i> قائمة الأدوية
                 </h3>
                 
                 <div id="medicines-inputs-container"></div>
 
-                <div style="margin-bottom: 20px;">
-                    <button type="button" id="add-med-btn" class="btn-add-more">
+                <div style="margin-bottom: 15px;">
+                    <button type="button" id="add-med-btn" class="btn-add-more" style="background: #e2efe2; color: #2b583f; border: 1px dashed #2b583f; padding: 10px; width: 100%; border-radius: 8px; font-weight: bold; cursor: pointer;">
                         <i class="fa-solid fa-plus"></i> إضافة دواء آخر
                     </button>
                 </div>
                 
-                <button type="submit" id="submitBtn" class="btn-submit-main" style="background: #2b583f; color: white; border: none; width: 100%; padding: 14px; border-radius: 10px; font-weight: bold; font-size: 1rem; cursor: pointer;">
+                <button type="submit" id="submitBtn" style="background: #2b583f; color: white; border: none; width: 100%; padding: 14px; border-radius: 10px; font-weight: bold; font-size: 1rem; cursor: pointer;">
                     <i class="fa-solid fa-qrcode"></i> حفظ وتوليد بطاقة الـ QR Code السحابية
                 </button>
             </form>
 
-            <div id="qrcode-section" style="text-align: center; margin-top: 30px; display: none; padding-top: 20px; border-top: 2px dashed #d4ebd4;">
-                <h3 style="color: #2b583f; margin-bottom: 10px;">تم حفظ البطاقة بنجاح على السحابة!</h3>
-                <p style="color: #666; font-size: 0.88rem; margin-bottom: 15px;">رقم المعرف السحابي: <b id="displaySerial"></b></p>
+            <div id="qrcode-section" style="text-align: center; margin-top: 25px; display: none; padding-top: 15px; border-top: 2px dashed #d4ebd4;">
+                <h3 style="color: #2b583f; margin-bottom: 8px; font-size: 1.1rem;">تم حفظ البطاقة بنجاح على السحابة!</h3>
+                <p style="color: #666; font-size: 0.85rem; margin-bottom: 12px;">المعرف السحابي: <b id="displaySerial"></b></p>
                 
-                <div id="qrcode" style="display: flex; justify-content: center; align-items: center; padding: 15px; background: white; border: 2px solid #2b583f; border-radius: 12px; width: fit-content; margin: 0 auto; box-shadow: 0 4px 12px rgba(0,0,0,0.08);"></div>
+                <div id="qrcode" style="display: flex; justify-content: center; align-items: center; padding: 12px; background: white; border: 2px solid #2b583f; border-radius: 12px; width: fit-content; margin: 0 auto; box-shadow: 0 4px 12px rgba(0,0,0,0.08);"></div>
                 
-                <div style="margin-top: 20px; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
-                    <button onclick="printQRCode()" style="background: #2b583f; color: white; border: none; padding: 10px 22px; border-radius: 20px; cursor: pointer; font-weight: bold; font-size: 0.95rem;">
+                <div style="margin-top: 15px; display: flex; gap: 8px; justify-content: center; flex-wrap: wrap;">
+                    <button onclick="printQRCode()" style="background: #2b583f; color: white; border: none; padding: 8px 18px; border-radius: 20px; cursor: pointer; font-weight: bold; font-size: 0.9rem;">
                         <i class="fa-solid fa-print"></i> طباعة الـ QR Code
                     </button>
-                    <a id="previewLink" href="#" target="_blank" style="background: #3b7a57; color: white; padding: 10px 22px; border-radius: 20px; text-decoration: none; font-weight: bold; font-size: 0.95rem; display: inline-block;">
+                    <a id="previewLink" href="#" target="_blank" style="background: #3b7a57; color: white; padding: 8px 18px; border-radius: 20px; text-decoration: none; font-weight: bold; font-size: 0.9rem; display: inline-block;">
                         <i class="fa-solid fa-eye"></i> معاينة البطاقة
                     </a>
                 </div>
@@ -101,7 +119,7 @@
         </div>
     </div>
 
-    <!-- كود ربط Firestore الخفيف والتخزين السريع بدون التعليق -->
+    <!-- كود جافاسكريبت وربط Firestore والتخزين السريع -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-app.js";
         import { getFirestore, collection, addDoc, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-firestore.js";
@@ -144,7 +162,7 @@
 
                     if (docSnap.exists()) {
                         const pData = docSnap.data();
-                        document.getElementById('pageTitle').innerHTML = `<i class="fa-solid fa-user-pen"></i> تعديل بيانات المريض (${editId})`;
+                        document.getElementById('pageTitle').innerHTML = `<i class="fa-solid fa-user-pen"></i> تعديل بيانات المريض`;
                         document.getElementById('submitBtn').innerHTML = `<i class="fa-solid fa-rotate"></i> تحديث وحفظ التعديلات السحابية`;
                         document.getElementById('editingPatientId').value = editId;
 
@@ -176,7 +194,6 @@
             window.location.href = 'signin.html';
         }
 
-        // تحويل خفيف وسريع جداً للصورة بدون الضغط على معالج الجهاز
         window.previewImage = function(fileInput) {
             const container = fileInput.closest('.upload-container');
             const fileNameDisplay = container.querySelector('.file-name-display');
@@ -192,7 +209,7 @@
                     img.src = e.target.result;
                     img.onload = function() {
                         const canvas = document.createElement('canvas');
-                        const maxDim = 400; // حجم مصغر وممتاز للعرض السريع
+                        const maxDim = 400;
                         let w = img.width;
                         let h = img.height;
 
@@ -207,7 +224,6 @@
                         const ctx = canvas.getContext('2d');
                         ctx.drawImage(img, 0, 0, w, h);
 
-                        // ضغط عالي يحول الصورة إلى نص خفيف لا يتجاوز 30KB
                         const compressedBase64 = canvas.toDataURL('image/jpeg', 0.5);
                         hiddenUrlInput.value = compressedBase64;
                         previewImg.src = compressedBase64;
@@ -222,24 +238,24 @@
         function createMedCard(name = '', dose = '', time = '', imgSrc = '') {
             const newCard = document.createElement('div');
             newCard.className = 'med-card med-input-group';
-            newCard.style.cssText = "background: #fafcfb; padding: 15px; border-radius: 10px; border: 1px solid #d4ebd4; margin-bottom: 12px; text-align: right;";
+            newCard.style.cssText = "background: #fafcfb; padding: 12px; border-radius: 10px; border: 1px solid #d4ebd4; margin-bottom: 12px; text-align: right;";
             
             const hasImg = imgSrc && imgSrc.length > 10;
             const imgDisplay = hasImg ? 'block' : 'none';
-            const imgText = hasImg ? 'الصورة المرفقة مسجلة' : 'لم يتم اختيار صورة';
+            const imgText = hasImg ? 'صورة الدواء مسجلة' : 'لم يتم اختيار صورة';
 
             newCard.innerHTML = `
-                <div style="display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 10px; margin-bottom: 10px;">
-                    <input type="text" class="med-name custom-input" placeholder="اسم الدواء" value="${name}" required style="padding: 10px; border: 1px solid #cce5cc; border-radius: 6px;">
-                    <input type="text" class="med-dose custom-input" placeholder="الجرعة" value="${dose}" required style="padding: 10px; border: 1px solid #cce5cc; border-radius: 6px;">
-                    <input type="text" class="med-time custom-input" placeholder="التوقيت" value="${time}" required style="padding: 10px; border: 1px solid #cce5cc; border-radius: 6px;">
+                <div class="med-grid">
+                    <input type="text" class="med-name custom-input" placeholder="اسم الدواء" value="${name}" required>
+                    <input type="text" class="med-dose custom-input" placeholder="الجرعة" value="${dose}" required>
+                    <input type="text" class="med-time custom-input" placeholder="التوقيت" value="${time}" required>
                 </div>
-                <div class="upload-container" style="display: flex; align-items: center; gap: 10px;">
-                    <label style="background: #2b583f; color: white; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 0.85rem;">
+                <div class="upload-container" style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-top: 8px;">
+                    <label style="background: #2b583f; color: white; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 0.85rem; display: inline-flex; align-items: center; gap: 5px;">
                         <i class="fa-solid fa-image"></i> إرفاق صورة الدواء
                         <input type="file" class="med-image-file" accept="image/*" style="display: none;" onchange="previewImage(this)">
                     </label>
-                    <span class="file-name-display" style="font-size: 0.85rem; color: #666;">${imgText}</span>
+                    <span class="file-name-display" style="font-size: 0.82rem; color: #666; word-break: break-all;">${imgText}</span>
                     <input type="hidden" class="existing-img-url" value="${imgSrc}">
                     <img class="preview-img" src="${hasImg ? imgSrc : ''}" style="display: ${imgDisplay}; width: 45px; height: 45px; object-fit: cover; border-radius: 6px;" alt="معاينة">
                 </div>
@@ -251,7 +267,6 @@
             document.getElementById('medicines-inputs-container').appendChild(createMedCard());
         });
 
-        // حفظ البيانات فورياً وبسرعة فائقة
         document.getElementById('doctor-form').addEventListener('submit', async function(e) {
             e.preventDefault();
 
@@ -321,52 +336,3 @@
 
             } catch (error) {
                 console.error("خطأ أثناء الحفظ السحابي:", error);
-                alert('❌ حدث خطأ أثناء الحفظ: ' + error.message);
-            } finally {
-                submitBtn.disabled = false;
-                submitBtn.innerHTML = '<i class="fa-solid fa-qrcode"></i> حفظ وتوليد بطاقة الـ QR Code السحابية';
-            }
-        });
-
-        window.printQRCode = function() {
-            const pInfo = window.currentSavedPatient;
-            if (!pInfo) return;
-
-            const qrContainer = document.getElementById('qrcode');
-            const qrImg = qrContainer.querySelector('img') || qrContainer.querySelector('canvas');
-            const qrImgSrc = qrImg ? (qrImg.src || qrImg.toDataURL("image/png")) : '';
-
-            const printWindow = window.open('', '', 'width=600,height=600');
-            printWindow.document.write(`
-                <html lang="ar" dir="rtl">
-                <head>
-                    <title>طباعة بطاقة المريض - ${pInfo.name}</title>
-                    <style>
-                        body { font-family: sans-serif; text-align: center; padding: 20px; }
-                        .print-card { border: 2px solid #2b583f; padding: 20px; border-radius: 12px; display: inline-block; max-width: 300px; }
-                        h2 { color: #2b583f; margin-bottom: 5px; font-size: 1.2rem; }
-                        p { margin: 4px 0; color: #444; font-size: 0.9rem; }
-                        img { margin-top: 15px; border: 1px solid #d4ebd4; padding: 8px; border-radius: 8px; }
-                    </style>
-                </head>
-                <body>
-                    <div class="print-card">
-                        <h2>MediMatch - البطاقة الرقمية</h2>
-                        <p><strong>اسم المريض:</strong> ${pInfo.name}</p>
-                        <p><strong>المعرف السحابي:</strong> ${pInfo.serialId}</p>
-                        <img src="${qrImgSrc}" width="180" height="180">
-                        <p style="font-size: 0.75rem; color: #777; margin-top: 10px;">امسح الكود لعرض الجدول الدوائي من أي جهاز</p>
-                    </div>
-                </body>
-                </html>
-            `);
-            printWindow.document.close();
-            printWindow.focus();
-            setTimeout(() => {
-                printWindow.print();
-                printWindow.close();
-            }, 500);
-        }
-    </script>
-</body>
-</html>
