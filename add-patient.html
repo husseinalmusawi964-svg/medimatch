@@ -5,17 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MediMatch - إضافة مريض سحابياً</title>
     
-    <script>
-        if (localStorage.getItem('isAuthorizedDoctor') !== 'true') {
-            alert('⚠️ غير مصرح لك بالدخول!');
-            window.location.href = 'signin.html';
-        }
-    </script>
-
-    <link rel="stylesheet" href="st.css">
+    <link rel="stylesheet" href="stiyel.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- مكتبات Firebase السحابية -->
+    <!-- مكتبات Firebase المطلوبة -->
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
@@ -24,14 +17,11 @@
 
     <div class="heho">
         <a href="index.html"><img class="soso" src="imeg/IMG_9459.PNG" alt="Logo"></a>
-        <div class="fofo" id="navLinksContainer">
+        <div class="fofo">
             <a href="index.html">الرئيسية</a>
             <a href="my-patients.html">مرضاي</a>
             <a href="add-patient.html" style="color: #2b583f; font-weight: bold;">إضافة مريض</a>
             <a href="help.html">المساعدة</a>
-            <span id="authNavArea">
-                <a href="signin.html" style="color: #2b583f; font-weight: bold;">تسجيل الدخول</a>
-            </span>
         </div>
     </div>
 
@@ -43,8 +33,6 @@
             </h2>
             
             <form id="doctor-form">
-                <input type="hidden" id="editingSerialId" value="">
-
                 <div style="background: #f0f7f4; padding: 18px; border-radius: 12px; border: 1px solid #d4ebd4; margin-bottom: 20px;">
                     <div style="margin-bottom: 12px; text-align: right;">
                         <label style="display: block; margin-bottom: 5px; color: #2b583f; font-weight: bold; font-size: 0.9rem;">اسم المريض الكامل:</label>
@@ -106,7 +94,7 @@
     </div>
 
     <script>
-        // إعدادات مشروعك في Firebase (madimatch)
+        // إعدادات Firebase الخاصة بك
         const firebaseConfig = {
             apiKey: "AIzaSyDrVLbKYdOZjZwo4ZpTuT2mhhJNG_UQUYc",
             authDomain: "madimatch.firebaseapp.com",
@@ -121,25 +109,8 @@
         const db = firebase.firestore();
 
         document.addEventListener('DOMContentLoaded', () => {
-            const activeUsername = localStorage.getItem('currentActiveUser');
-            const authNavArea = document.getElementById('authNavArea');
-
-            if (activeUsername) {
-                authNavArea.innerHTML = `
-                    <span style="color: #85c29d; font-weight: bold; padding: 6px 10px; display: inline-flex; align-items: center; gap: 5px;">
-                        <i class="fa-solid fa-user-shield"></i> ${activeUsername}
-                    </span>
-                    <button onclick="logoutSystem()" style="background: #d9534f; color: white; border: none; padding: 5px 10px; border-radius: 12px; cursor: pointer; font-size: 0.8rem; margin-right: 5px;">خروج</button>
-                `;
-            }
             document.getElementById('medicines-inputs-container').appendChild(createMedCard());
         });
-
-        function logoutSystem() {
-            localStorage.removeItem('isAuthorizedDoctor');
-            localStorage.removeItem('currentActiveUser');
-            window.location.href = 'signin.html';
-        }
 
         function createMedCard(name = '', dose = '', time = '') {
             const newCard = document.createElement('div');
@@ -184,15 +155,12 @@
                 condition,
                 allergies,
                 medicines,
-                createdBy: localStorage.getItem('currentActiveUser') || 'admin',
                 createdAt: new Date()
             };
 
             try {
-                // حفظ المريض في قاعدة بيانات Firebase Firestore سحابياً
                 await db.collection('patients').doc(patientSerialID).set(patientData);
 
-                // بناء رابط الـ QR لفتح البطاقة سحابياً عبر الرقم التسلسلي
                 const currentUrl = window.location.href.substring(0, window.location.href.lastIndexOf('/') + 1);
                 const fullTargetUrl = currentUrl + 'patient-view.html?id=' + patientSerialID;
 
@@ -210,7 +178,7 @@
                     correctLevel : QRCode.CorrectLevel.L
                 });
 
-                alert('✅ تم حفظ بيانات المريض والأدوية في السحابة بنجاح تام!');
+                alert('✅ تم حفظ بيانات المريض في السحابة بنجاح!');
             } catch (error) {
                 alert('❌ حدث خطأ أثناء الحفظ بالسحابة: ' + error.message);
             }
