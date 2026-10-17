@@ -94,9 +94,11 @@
         </div>
     </div>
 
+    <!-- كود الجافاسكريبت وربط السحابة + Analytics -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDrVLbKYdOZjZwo4ZpTuT2mhhJNG_UQUYc",
@@ -110,6 +112,13 @@
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
+
+        // تفعيل خدمة التحليلات للتعقب وإحصائيات زيارة بطاقة المريض
+        try {
+            getAnalytics(app);
+        } catch (e) {
+            console.log("Analytics initialization error/disabled:", e);
+        }
 
         document.addEventListener('DOMContentLoaded', async () => {
             const urlParams = new URLSearchParams(window.location.search);
