@@ -92,23 +92,10 @@
         }
 
         @media (max-width: 600px) {
-            .main-container { 
-                margin: 10px; 
-                padding: 15px; 
-                border-radius: 12px; 
-            }
-            .med-grid { 
-                grid-template-columns: 1fr; 
-                gap: 8px; 
-            }
-            .row-group { 
-                flex-direction: column; 
-                gap: 10px; 
-            }
-            .upload-container {
-                flex-direction: column;
-                align-items: flex-start !important;
-            }
+            .main-container { margin: 10px; padding: 15px; border-radius: 12px; }
+            .med-grid { grid-template-columns: 1fr; gap: 8px; }
+            .row-group { flex-direction: column; gap: 10px; }
+            .upload-container { flex-direction: column; align-items: flex-start !important; }
         }
     </style>
 </head>
@@ -152,7 +139,7 @@
                         </div>
                         <div class="col-flex" style="flex: 2;">
                             <label style="display: block; margin-bottom: 5px; color: #2b583f; font-weight: bold; font-size: 0.9rem;">الحالة الصحية:</label>
-                            <input type="text" id="patientCondition" class="custom-input" required placeholder="التشخيص / الحالة">
+                            <input type="text" id="patientCondition" class="custom-input" required placeholder="التشخيص الصحي">
                         </div>
                     </div>
 
@@ -167,7 +154,7 @@
                         <label style="display: block; margin-bottom: 5px; color: #2b583f; font-weight: bold; font-size: 0.9rem;">
                             <i class="fa-solid fa-clipboard"></i> ملاحظات وتعليمات للمريض:
                         </label>
-                        <textarea id="patientNotes" class="custom-input" rows="3" style="resize: vertical; font-family: inherit;" placeholder="تعليمات إضافية..."></textarea>
+                        <textarea id="patientNotes" class="custom-input" rows="3" style="resize: vertical; font-family: inherit;" placeholder="تعليمات استخدام الأدوية..."></textarea>
                     </div>
                 </div>
 
@@ -189,13 +176,13 @@
             </form>
 
             <div id="qrcode-section" style="text-align: center; margin-top: 25px; display: none; padding-top: 15px; border-top: 2px dashed #d4ebd4;">
-                <h3 style="color: #2b583f; margin-bottom: 8px; font-size: 1.1rem;">تم حفظ البطاقة بنجاح على السحابة!</h3>
+                <h3 style="color: #2b583f; margin-bottom: 8px; font-size: 1.1rem;">تم حفظ البطاقة بنجاح!</h3>
                 <p style="color: #666; font-size: 0.85rem; margin-bottom: 12px;">المعرف السحابي: <b id="displaySerial"></b></p>
                 
                 <div id="qrcode" style="display: flex; justify-content: center; align-items: center; padding: 12px; background: white; border: 2px solid #2b583f; border-radius: 12px; width: fit-content; margin: 0 auto; box-shadow: 0 4px 12px rgba(0,0,0,0.08);"></div>
                 
                 <div style="margin-top: 15px; display: flex; gap: 8px; justify-content: center; flex-wrap: wrap;">
-                    <button onclick="printQRCode()" style="background: #2b583f; color: white; border: none; padding: 8px 18px; border-radius: 20px; cursor: pointer; font-weight: bold; font-size: 0.9rem;">
+                    <button type="button" id="btnPrintQR" style="background: #2b583f; color: white; border: none; padding: 8px 18px; border-radius: 20px; cursor: pointer; font-weight: bold; font-size: 0.9rem;">
                         <i class="fa-solid fa-print"></i> طباعة الـ QR Code
                     </button>
                     <a id="previewLink" href="#" target="_blank" style="background: #3b7a57; color: white; padding: 8px 18px; border-radius: 20px; text-decoration: none; font-weight: bold; font-size: 0.9rem; display: inline-block;">
@@ -206,7 +193,7 @@
         </div>
     </div>
 
-    <!-- كود الجافاسكريبت وربط السحابة المصلح -->
+    <!-- كود الجافاسكريبت والربط السحابي -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, collection, addDoc, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
@@ -224,11 +211,256 @@
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
-        let analytics;
-        try {
-            analytics = getAnalytics(app);
-        } catch (e) {
-            console.log("Analytics error/disabled:", e);
+        try { getAnalytics(app); } catch (e) {}
+
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('statusToast');
+            if(!toast) return;
+            toast.className = `inline-toast ${type === 'success' ? 'toast-success' : 'toast-error'}`;
+            const icon = type === 'success' ? 'fa-circle-check' : 'fa-triangle-exclamation';
+            toast.innerHTML = `<i class="fa-solid ${icon}"></i> <span>${message}</span>`;
+            toast.style.display = 'flex';
+            toast.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         }
 
-        function showToast
+        function createMedCard(name = '', dose = '', time = '', imgSrc = '') {
+            const newCard = document.createElement('div');
+            newCard.className = 'med-card med-input-group';
+            newCard.style.cssText = "background: #fafcfb; padding: 12px; border-radius: 10px; border: 1px solid #d4ebd4; margin-bottom: 12px; text-align: right;";
+            
+            const hasImg = imgSrc && imgSrc.length > 10;
+            const imgDisplay = hasImg ? 'block' : 'none';
+            const imgText = hasImg ? 'صورة مسجلة' : 'لم يتم اختيار صورة';
+
+            newCard.innerHTML = `
+                <div class="med-grid">
+                    <input type="text" class="med-name custom-input" placeholder="اسم الدواء" value="${name}" required>
+                    <input type="text" class="med-dose custom-input" placeholder="الجرعة" value="${dose}" required>
+                    <input type="text" class="med-time custom-input" placeholder="التوقيت" value="${time}" required>
+                </div>
+                <div class="upload-container" style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-top: 8px;">
+                    <label style="background: #2b583f; color: white; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 0.85rem; display: inline-flex; align-items: center; gap: 5px;">
+                        <i class="fa-solid fa-image"></i> إرفاق صورة الدواء
+                        <input type="file" class="med-image-file" accept="image/*" style="display: none;">
+                    </label>
+                    <span class="file-name-display" style="font-size: 0.82rem; color: #666; word-break: break-all;">${imgText}</span>
+                    <input type="hidden" class="existing-img-url" value="${imgSrc}">
+                    <img class="preview-img" src="${hasImg ? imgSrc : ''}" style="display: ${imgDisplay}; width: 45px; height: 45px; object-fit: cover; border-radius: 6px;" alt="معاينة">
+                    <button type="button" class="btn-remove-med" style="background: #ffeded; color: #d9534f; border: 1px solid #f5c6cb; border-radius: 6px; padding: 4px 10px; font-size: 0.8rem; cursor: pointer; margin-right: auto;">
+                        <i class="fa-solid fa-trash"></i> حذف
+                    </button>
+                </div>
+            `;
+
+            const fileInput = newCard.querySelector('.med-image-file');
+            fileInput.addEventListener('change', function() {
+                const container = this.closest('.upload-container');
+                const fileNameDisplay = container.querySelector('.file-name-display');
+                const previewImg = container.querySelector('.preview-img');
+                const hiddenUrlInput = container.querySelector('.existing-img-url');
+                const file = this.files[0];
+
+                if (file) {
+                    fileNameDisplay.textContent = "جاري التحضير...";
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const img = new Image();
+                        img.src = e.target.result;
+                        img.onload = function() {
+                            const canvas = document.createElement('canvas');
+                            const maxDim = 200;
+                            let w = img.width, h = img.height;
+                            if (w > h) { if (w > maxDim) { h *= maxDim / w; w = maxDim; } }
+                            else { if (h > maxDim) { w *= maxDim / h; h = maxDim; } }
+
+                            canvas.width = w; canvas.height = h;
+                            const ctx = canvas.getContext('2d');
+                            ctx.drawImage(img, 0, 0, w, h);
+
+                            const compressedBase64 = canvas.toDataURL('image/jpeg', 0.3);
+                            hiddenUrlInput.value = compressedBase64;
+                            previewImg.src = compressedBase64;
+                            previewImg.style.display = 'block';
+                            fileNameDisplay.textContent = file.name;
+                        };
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+
+            newCard.querySelector('.btn-remove-med').addEventListener('click', () => {
+                const container = document.getElementById('medicines-inputs-container');
+                if (container.children.length > 1) {
+                    newCard.remove();
+                } else {
+                    showToast("يجب إدخال دواء واحد على الأقل", "error");
+                }
+            });
+
+            return newCard;
+        }
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            const isAuth = localStorage.getItem('isAuthorizedDoctor');
+            const doctorName = localStorage.getItem('doctorName') || 'الصيدلي';
+            const authNavArea = document.getElementById('authNavArea');
+
+            if (isAuth === 'true' && authNavArea) {
+                authNavArea.innerHTML = `
+                    <span style="color: #85c29d; font-weight: bold; padding: 6px 10px; display: inline-flex; align-items: center; gap: 5px;">
+                        <i class="fa-solid fa-user-shield"></i> ${doctorName}
+                    </span>
+                    <button id="logoutBtn" style="background: #d9534f; color: white; border: none; padding: 5px 10px; border-radius: 12px; cursor: pointer; font-size: 0.8rem; margin-right: 5px;">خروج</button>
+                `;
+                document.getElementById('logoutBtn').addEventListener('click', () => {
+                    localStorage.removeItem('isAuthorizedDoctor');
+                    localStorage.removeItem('doctorName');
+                    window.location.href = 'signin.html';
+                });
+            }
+
+            const container = document.getElementById('medicines-inputs-container');
+            const addBtn = document.getElementById('add-med-btn');
+
+            if (addBtn) {
+                addBtn.addEventListener('click', () => {
+                    container.appendChild(createMedCard());
+                });
+            }
+
+            const urlParams = new URLSearchParams(window.location.search);
+            const editId = urlParams.get('edit');
+
+            if (editId) {
+                try {
+                    const docRef = doc(db, "patients", editId);
+                    const docSnap = await getDoc(docRef);
+
+                    if (docSnap.exists()) {
+                        const pData = docSnap.data();
+                        document.getElementById('pageTitle').innerHTML = `<i class="fa-solid fa-user-pen"></i> تعديل بيانات المريض`;
+                        document.getElementById('submitBtn').innerHTML = `<i class="fa-solid fa-rotate"></i> تحديث وحفظ التعديلات`;
+                        document.getElementById('editingPatientId').value = editId;
+
+                        document.getElementById('patientName').value = pData.name || '';
+                        document.getElementById('patientAge').value = pData.age || '';
+                        document.getElementById('patientCondition').value = pData.condition || '';
+                        document.getElementById('patientAllergies').value = pData.allergies || '';
+                        document.getElementById('patientNotes').value = pData.notes || '';
+
+                        container.innerHTML = '';
+                        if (pData.medicines && pData.medicines.length > 0) {
+                            pData.medicines.forEach(m => {
+                                container.appendChild(createMedCard(m.name, m.dose, m.time, m.image || ''));
+                            });
+                        } else {
+                            container.appendChild(createMedCard());
+                        }
+                    }
+                } catch (error) {
+                    console.error("خطأ:", error);
+                }
+            } else {
+                container.appendChild(createMedCard());
+            }
+
+            document.getElementById('doctor-form').addEventListener('submit', async (e) => {
+                e.preventDefault();
+
+                const submitBtn = document.getElementById('submitBtn');
+                const originalBtnText = submitBtn.innerHTML;
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> جاري الحفظ والتوليد...`;
+
+                try {
+                    const name = document.getElementById('patientName').value.trim();
+                    const age = document.getElementById('patientAge').value.trim();
+                    const conditionVal = document.getElementById('patientCondition').value.trim();
+                    const allergies = document.getElementById('patientAllergies').value.trim();
+                    const notes = document.getElementById('patientNotes').value.trim();
+                    const editingId = document.getElementById('editingPatientId').value;
+
+                    const medCards = document.querySelectorAll('.med-card');
+                    const medicines = [];
+                    medCards.forEach(card => {
+                        const medName = card.querySelector('.med-name').value.trim();
+                        const medDose = card.querySelector('.med-dose').value.trim();
+                        const medTime = card.querySelector('.med-time').value.trim();
+                        const medImg = card.querySelector('.existing-img-url') ? card.querySelector('.existing-img-url').value : '';
+
+                        if (medName) {
+                            medicines.push({ name: medName, dose: medDose, time: medTime, image: medImg });
+                        }
+                    });
+
+                    const patientData = {
+                        name,
+                        age,
+                        condition: conditionVal,
+                        allergies,
+                        notes,
+                        medicines,
+                        doctorName: localStorage.getItem('doctorName') || 'الصيدلي',
+                        updatedAt: new Date().toISOString()
+                    };
+
+                    let savedId = editingId;
+
+                    if (editingId) {
+                        const docRef = doc(db, "patients", editingId);
+                        await updateDoc(docRef, patientData);
+                        showToast("تم تحديث بطاقة المريض بنجاح!", "success");
+                    } else {
+                        patientData.createdAt = new Date().toISOString();
+                        const docRef = await addDoc(collection(db, "patients"), patientData);
+                        savedId = docRef.id;
+                        document.getElementById('editingPatientId').value = savedId;
+                        showToast("تم حفظ المريض وتوليد بطاقة الـ QR Code بنجاح!", "success");
+                    }
+
+                    displayQRCode(savedId);
+
+                } catch (error) {
+                    console.error("Error:", error);
+                    showToast("حدث خطأ أثناء الحفظ بالسحابة: " + error.message, "error");
+                } finally {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = originalBtnText;
+                }
+            });
+
+            document.getElementById('btnPrintQR').addEventListener('click', () => {
+                window.print();
+            });
+        });
+
+        function displayQRCode(patientId) {
+            document.getElementById('displaySerial').textContent = patientId;
+            // تم ضبط رابط المعاينة بدقة ليطابق اسم الملف الجديد patient-view.html
+            const previewUrl = `patient-view.html?id=${patientId}`;
+            document.getElementById('previewLink').href = previewUrl;
+            
+            const qrContainer = document.getElementById('qrcode');
+            qrContainer.innerHTML = '';
+            
+            const fullPreviewUrl = window.location.origin + window.location.pathname.replace('add-patient.html', '') + previewUrl;
+            
+            if (typeof QRCode !== 'undefined') {
+                new QRCode(qrContainer, {
+                    text: fullPreviewUrl,
+                    width: 150,
+                    height: 150,
+                    colorDark: "#2b583f",
+                    colorLight: "#ffffff",
+                    correctLevel: QRCode.CorrectLevel.H
+                });
+            } else {
+                qrContainer.innerHTML = `<p style="color:red;">مكتبة QR Code غير محمّلة.</p>`;
+            }
+
+            document.getElementById('qrcode-section').style.display = 'block';
+            document.getElementById('qrcode-section').scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

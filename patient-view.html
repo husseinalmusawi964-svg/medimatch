@@ -37,8 +37,8 @@
             gap: 15px; 
         }
         .med-img { 
-            width: 65px; 
-            height: 65px; 
+            width: 70px; 
+            height: 70px; 
             object-fit: cover; 
             border-radius: 10px; 
             border: 1px solid #cce5cc; 
@@ -89,12 +89,12 @@
         <div class="card-container" id="patientCard">
             <div style="text-align: center; padding: 40px; color: #2b583f;">
                 <i class="fa-solid fa-spinner fa-spin" style="font-size: 2.5rem; margin-bottom: 15px;"></i>
-                <p style="font-size: 1.1rem; font-weight: bold;">جاري جلب بيانات المريض من السحابة...</p>
+                <p style="font-size: 1.1rem; font-weight: bold;">جاري جلب بيانات المريض والأدوية من السحابة...</p>
             </div>
         </div>
     </div>
 
-    <!-- كود الجافاسكريبت وربط السحابة + Analytics -->
+    <!-- كود الجافاسكريبت المصلح لقراءة الأدوية وعرضها -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
@@ -113,12 +113,7 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // تفعيل خدمة التحليلات للتعقب وإحصائيات زيارة بطاقة المريض
-        try {
-            getAnalytics(app);
-        } catch (e) {
-            console.log("Analytics initialization error/disabled:", e);
-        }
+        try { getAnalytics(app); } catch (e) {}
 
         document.addEventListener('DOMContentLoaded', async () => {
             const urlParams = new URLSearchParams(window.location.search);
@@ -149,24 +144,35 @@
             const container = document.getElementById('patientCard');
             
             let medicinesHTML = '';
-            if (patient.medicines && patient.medicines.length > 0) {
-                patient.medicines.forEach(med => {
+            
+            // فحص مصفوفة الأدوية ومعالجتها بغض النظر عن طريقة حفظها
+            if (patient.medicines && Array.isArray(patient.medicines) && patient.medicines.length > 0) {
+                patient.medicines.forEach((med) => {
+                    const medName = med.name || 'دواء بدون اسم';
+                    const medDose = med.dose || 'غير محددة';
+                    const medTime = med.time || 'غير محدد';
                     const hasImg = med.image && med.image.length > 10;
+
                     medicinesHTML += `
                         <div class="med-item">
                             <div style="flex: 1;">
                                 <h4 style="margin: 0 0 5px 0; color: #2b583f; font-size: 1.1rem;">
-                                    <i class="fa-solid fa-capsules"></i> ${med.name}
+                                    <i class="fa-solid fa-capsules"></i> ${medName}
                                 </h4>
-                                <p style="margin: 3px 0; color: #555; font-size: 0.9rem;"><strong>الجرعة:</strong> ${med.dose}</p>
-                                <p style="margin: 3px 0; color: #777; font-size: 0.85rem;"><strong>التوقيت:</strong> ${med.time}</p>
+                                <p style="margin: 3px 0; color: #555; font-size: 0.9rem;"><strong>الجرعة:</strong> ${medDose}</p>
+                                <p style="margin: 3px 0; color: #777; font-size: 0.85rem;"><strong>التوقيت:</strong> ${medTime}</p>
                             </div>
-                            ${hasImg ? `<img src="${med.image}" class="med-img" alt="${med.name}">` : ''}
+                            ${hasImg ? `<img src="${med.image}" class="med-img" alt="${medName}">` : ''}
                         </div>
                     `;
                 });
             } else {
-                medicinesHTML = `<p style="text-align: center; color: #888;">لا توجد أدوية مسجلة في هذا الجدول.</p>`;
+                medicinesHTML = `
+                    <div style="text-align: center; padding: 15px; background: #fafcfb; border: 1px dashed #cce5cc; border-radius: 10px; color: #888;">
+                        <i class="fa-solid fa-pills" style="font-size: 1.5rem; margin-bottom: 5px; color: #a5d6a5;"></i>
+                        <p style="margin: 0;">لا توجد أدوية مسجلة في هذه البطاقة.</p>
+                    </div>
+                `;
             }
 
             let allergyHTML = '';
