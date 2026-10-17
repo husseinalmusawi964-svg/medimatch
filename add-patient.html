@@ -15,15 +15,59 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
-        body { background-color: #f4f7f5; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; }
-        .main-container { max-width: 700px; margin: 20px auto; background: #fff; padding: 20px; border-radius: 16px; box-shadow: 0 8px 20px rgba(43, 88, 63, 0.08); border: 1px solid #d4ebd4; box-sizing: border-box; }
-        .custom-input { width: 100%; padding: 12px; border: 1px solid #cce5cc; border-radius: 8px; box-sizing: border-box; font-size: 0.95rem; background: #fff; }
-        .custom-input:focus { border-color: #2b583f; outline: none; box-shadow: 0 0 5px rgba(43, 88, 63, 0.2); }
+        body { 
+            background-color: #f4f7f5; 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            margin: 0; 
+            padding: 0; 
+        }
+
+        .main-container { 
+            max-width: 700px; 
+            margin: 20px auto; 
+            background: #fff; 
+            padding: 20px; 
+            border-radius: 16px; 
+            box-shadow: 0 8px 20px rgba(43, 88, 63, 0.08); 
+            border: 1px solid #d4ebd4; 
+            box-sizing: border-box; 
+        }
+
+        .custom-input { 
+            width: 100%; 
+            padding: 12px; 
+            border: 1px solid #cce5cc; 
+            border-radius: 8px; 
+            box-sizing: border-box; 
+            font-size: 0.95rem; 
+            background: #fff; 
+            outline: none;
+            transition: 0.3s;
+        }
+
+        .custom-input:focus { 
+            border-color: #2b583f; 
+            box-shadow: 0 0 5px rgba(43, 88, 63, 0.2); 
+        }
         
-        .row-group { display: flex; gap: 10px; margin-bottom: 12px; flex-wrap: wrap; }
-        .col-flex { flex: 1; min-width: 140px; }
+        .row-group { 
+            display: flex; 
+            gap: 10px; 
+            margin-bottom: 12px; 
+            flex-wrap: wrap; 
+        }
+
+        .col-flex { 
+            flex: 1; 
+            min-width: 140px; 
+        } 
         
-        .med-grid { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 8px; margin-bottom: 10px; }
+        .med-grid { 
+            display: grid; 
+            grid-template-columns: 2fr 1fr 1fr; 
+            gap: 8px; 
+            margin-bottom: 10px; 
+        }
         
         .inline-toast {
             display: none;
@@ -47,10 +91,25 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
+        /* تحسين الملائمة للهواتف الذكية */
         @media (max-width: 600px) {
-            .main-container { margin: 10px; padding: 15px; border-radius: 12px; }
-            .med-grid { grid-template-columns: 1fr; gap: 8px; }
-            .row-group { flex-direction: column; gap: 10px; }
+            .main-container { 
+                margin: 10px; 
+                padding: 15px; 
+                border-radius: 12px; 
+            }
+            .med-grid { 
+                grid-template-columns: 1fr; 
+                gap: 8px; 
+            }
+            .row-group { 
+                flex-direction: column; 
+                gap: 10px; 
+            }
+            .upload-container {
+                flex-direction: column;
+                align-items: flex-start !important;
+            }
         }
     </style>
 </head>
@@ -84,25 +143,33 @@
                 <div style="background: #f0f7f4; padding: 15px; border-radius: 12px; border: 1px solid #d4ebd4; margin-bottom: 15px;">
                     <div style="margin-bottom: 10px; text-align: right;">
                         <label style="display: block; margin-bottom: 5px; color: #2b583f; font-weight: bold; font-size: 0.9rem;">اسم المريض الكامل:</label>
-                        <input type="text" id="patientName" class="custom-input" required placeholder="مثال: أحمد محمد">
+                        <input type="text" id="patientName" class="custom-input" required placeholder="">
                     </div>
 
                     <div class="row-group" style="text-align: right;">
                         <div class="col-flex" style="flex: 1;">
                             <label style="display: block; margin-bottom: 5px; color: #2b583f; font-weight: bold; font-size: 0.9rem;">العمر:</label>
-                            <input type="number" id="patientAge" class="custom-input" required placeholder="50">
+                            <input type="number" id="patientAge" class="custom-input" required placeholder="">
                         </div>
                         <div class="col-flex" style="flex: 2;">
                             <label style="display: block; margin-bottom: 5px; color: #2b583f; font-weight: bold; font-size: 0.9rem;">الحالة الصحية:</label>
-                            <input type="text" id="patientCondition" class="custom-input" required placeholder="سكري وضغط الدم">
+                            <input type="text" id="patientCondition" class="custom-input" required placeholder="">
                         </div>
                     </div>
 
-                    <div style="text-align: right;">
+                    <div style="text-align: right; margin-bottom: 10px;">
                         <label style="display: block; margin-bottom: 5px; color: #b22222; font-weight: bold; font-size: 0.9rem;">
                             <i class="fa-solid fa-triangle-exclamation"></i> حساسية الأدوية (إن وجدت):
                         </label>
-                        <input type="text" id="patientAllergies" class="custom-input" style="border-color: #f5c6cb; background: #fffdfd;" placeholder="حساسية من البنسلين...">
+                        <input type="text" id="patientAllergies" class="custom-input" style="border-color: #f5c6cb; background: #fffdfd;" placeholder="">
+                    </div>
+
+                    <!-- حقل إضافة الملاحظات والتعليمات للمريض -->
+                    <div style="text-align: right;">
+                        <label style="display: block; margin-bottom: 5px; color: #2b583f; font-weight: bold; font-size: 0.9rem;">
+                            <i class="fa-solid fa-clipboard"></i> ملاحظات وتعليمات للمريض:
+                        </label>
+                        <textarea id="patientNotes" class="custom-input" rows="3" style="resize: vertical; font-family: inherit;" placeholder=""></textarea>
                     </div>
                 </div>
 
@@ -141,9 +208,10 @@
         </div>
     </div>
 
+    <!-- كود الجافاسكريبت وربط السحابة -->
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-app.js";
-        import { getFirestore, collection, addDoc, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-firestore.js";
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDrVLbKYdOZjZwo4ZpTuT2mhhJNG_UQUYc",
@@ -167,7 +235,8 @@
             toast.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         }
 
-        window.createMedCard = function(name = '', dose = '', time = '', imgSrc = '') {
+        // دالة تضمن إنشاء خانة الدواء بشكل صحيح مع عنونة واضحة لمدخلات الدواء
+        function createMedCard(name = '', dose = '', time = '', imgSrc = '') {
             const newCard = document.createElement('div');
             newCard.className = 'med-card med-input-group';
             newCard.style.cssText = "background: #fafcfb; padding: 12px; border-radius: 10px; border: 1px solid #d4ebd4; margin-bottom: 12px; text-align: right;";
@@ -185,17 +254,23 @@
                 <div class="upload-container" style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-top: 8px;">
                     <label style="background: #2b583f; color: white; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 0.85rem; display: inline-flex; align-items: center; gap: 5px;">
                         <i class="fa-solid fa-image"></i> إرفاق صورة الدواء
-                        <input type="file" class="med-image-file" accept="image/*" style="display: none;" onchange="previewImage(this)">
+                        <input type="file" class="med-image-file" accept="image/*" style="display: none;">
                     </label>
                     <span class="file-name-display" style="font-size: 0.82rem; color: #666; word-break: break-all;">${imgText}</span>
                     <input type="hidden" class="existing-img-url" value="${imgSrc}">
                     <img class="preview-img" src="${hasImg ? imgSrc : ''}" style="display: ${imgDisplay}; width: 45px; height: 45px; object-fit: cover; border-radius: 6px;" alt="معاينة">
                 </div>
             `;
-            return newCard;
-        };
 
-        window.previewImage = function(fileInput) {
+            const fileInput = newCard.querySelector('.med-image-file');
+            fileInput.addEventListener('change', function() {
+                previewImage(this);
+            });
+
+            return newCard;
+        }
+
+        function previewImage(fileInput) {
             const container = fileInput.closest('.upload-container');
             const fileNameDisplay = container.querySelector('.file-name-display');
             const previewImg = container.querySelector('.preview-img');
@@ -234,7 +309,7 @@
                 };
                 reader.readAsDataURL(file);
             }
-        };
+        }
 
         document.addEventListener('DOMContentLoaded', async () => {
             const isAuth = localStorage.getItem('isAuthorizedDoctor');
@@ -254,6 +329,11 @@
             const editId = urlParams.get('edit');
             const container = document.getElementById('medicines-inputs-container');
 
+            // تفعيل زر إضافة دواء جديد
+            document.getElementById('add-med-btn').addEventListener('click', () => {
+                container.appendChild(createMedCard());
+            });
+
             if (editId) {
                 try {
                     const docRef = doc(db, "patients", editId);
@@ -269,153 +349,26 @@
                         document.getElementById('patientAge').value = pData.age || '';
                         document.getElementById('patientCondition').value = pData.condition || '';
                         document.getElementById('patientAllergies').value = pData.allergies || '';
+                        document.getElementById('patientNotes').value = pData.notes || '';
 
                         container.innerHTML = '';
                         if (pData.medicines && pData.medicines.length > 0) {
                             pData.medicines.forEach(m => {
-                                container.appendChild(createMedCard(m.name, m.dose, m.time, m.image));
+                                container.appendChild(createMedCard(m.name, m.dose, m.time, m.image || ''));
                             });
                         } else {
                             container.appendChild(createMedCard());
                         }
                     }
-                } catch (err) {
-                    console.error("خطأ في جلب بيانات التعديل:", err);
-                    container.appendChild(createMedCard());
+                } catch (error) {
+                    console.error("Error loading patient:", error);
+                    showToast("حدث خطأ أثناء تحميل بيانات المريض", "error");
                 }
             } else {
+                // إذا كانت صفحة إضافة مريض جديد، أضف خانة دواء فارغة افتراضياً
                 container.appendChild(createMedCard());
             }
-
-            const addMedBtn = document.getElementById('add-med-btn');
-            if (addMedBtn) {
-                addMedBtn.addEventListener('click', () => {
-                    container.appendChild(createMedCard());
-                });
-            }
         });
-
-        window.logoutSystem = function() {
-            localStorage.removeItem('isAuthorizedDoctor');
-            localStorage.removeItem('doctorName');
-            window.location.href = 'signin.html';
-        };
-
-        document.getElementById('doctor-form').addEventListener('submit', async function(e) {
-            e.preventDefault();
-
-            const submitBtn = document.getElementById('submitBtn');
-            submitBtn.disabled = true;
-            submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> جاري الحفظ السحابي...';
-
-            try {
-                const name = document.getElementById('patientName').value.trim();
-                const age = document.getElementById('patientAge').value.trim();
-                const condition = document.getElementById('patientCondition').value.trim();
-                const allergies = document.getElementById('patientAllergies').value.trim() || 'لا توجد';
-                const editingId = document.getElementById('editingPatientId').value.trim();
-
-                const medicines = [];
-                const medRows = document.querySelectorAll('.med-input-group');
-                
-                for (const row of medRows) {
-                    const imageUrl = row.querySelector('.existing-img-url').value;
-
-                    medicines.push({
-                        name: row.querySelector('.med-name').value.trim(),
-                        dose: row.querySelector('.med-dose').value.trim(),
-                        time: row.querySelector('.med-time').value.trim(),
-                        image: imageUrl
-                    });
-                }
-
-                const patientData = {
-                    name,
-                    age,
-                    condition,
-                    allergies,
-                    medicines,
-                    updatedAt: new Date()
-                };
-
-                let patientDocId = editingId;
-
-                if (editingId) {
-                    await updateDoc(doc(db, "patients", editingId), patientData);
-                } else {
-                    patientData.createdAt = new Date();
-                    const docRef = await addDoc(collection(db, "patients"), patientData);
-                    patientDocId = docRef.id;
-                }
-
-                const baseUrl = window.location.href.replace(/\/[^/]*$/, '/');
-                const patientViewUrl = baseUrl + 'patient-view.html?id=' + patientDocId;
-
-                const qrContainer = document.getElementById('qrcode');
-                qrContainer.innerHTML = '';
-                
-                document.getElementById('qrcode-section').style.display = 'block';
-                document.getElementById('displaySerial').textContent = patientDocId;
-                document.getElementById('previewLink').href = patientViewUrl;
-
-                new QRCode(qrContainer, {
-                    text: patientViewUrl,
-                    width: 180,
-                    height: 180,
-                    correctLevel: QRCode.CorrectLevel.M
-                });
-
-                window.currentSavedPatient = { serialId: patientDocId, name, patientViewUrl };
-                showToast('🎉 تم حفظ البيانات وتوليد الـ QR Code السحابي بنجاح!', 'success');
-
-            } catch (error) {
-                console.error("خطأ أثناء الحفظ السحابي:", error);
-                showToast('❌ حدث خطأ أثناء الحفظ: ' + error.message, 'error');
-            } finally {
-                submitBtn.disabled = false;
-                submitBtn.innerHTML = '<i class="fa-solid fa-qrcode"></i> حفظ وتوليد بطاقة الـ QR Code السحابية';
-            }
-        });
-
-        window.printQRCode = function() {
-            const pInfo = window.currentSavedPatient;
-            if (!pInfo) return;
-
-            const qrContainer = document.getElementById('qrcode');
-            const qrImg = qrContainer.querySelector('img') || qrContainer.querySelector('canvas');
-            const qrImgSrc = qrImg ? (qrImg.src || qrImg.toDataURL("image/png")) : '';
-
-            const printWindow = window.open('', '', 'width=600,height=600');
-            printWindow.document.write(`
-                <html lang="ar" dir="rtl">
-                <head>
-                    <title>طباعة بطاقة المريض - ${pInfo.name}</title>
-                    <style>
-                        body { font-family: sans-serif; text-align: center; padding: 20px; }
-                        .print-card { border: 2px solid #2b583f; padding: 20px; border-radius: 12px; display: inline-block; max-width: 300px; }
-                        h2 { color: #2b583f; margin-bottom: 5px; font-size: 1.2rem; }
-                        p { margin: 4px 0; color: #444; font-size: 0.9rem; }
-                        img { margin-top: 15px; border: 1px solid #d4ebd4; padding: 8px; border-radius: 8px; }
-                    </style>
-                </head>
-                <body>
-                    <div class="print-card">
-                        <h2>MediMatch - البطاقة الرقمية</h2>
-                        <p><strong>اسم المريض:</strong> ${pInfo.name}</p>
-                        <p><strong>المعرف السحابي:</strong> ${pInfo.serialId}</p>
-                        <img src="${qrImgSrc}" width="180" height="180">
-                        <p style="font-size: 0.75rem; color: #777; margin-top: 10px;">امسح الكود لعرض الجدول الدوائي من أي جهاز</p>
-                    </div>
-                </body>
-                </html>
-            `);
-            printWindow.document.close();
-            printWindow.focus();
-            setTimeout(() => {
-                printWindow.print();
-                printWindow.close();
-            }, 500);
-        };
     </script>
 </body>
 </html>
