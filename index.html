@@ -15,6 +15,104 @@
     
     <!-- ملف الـ CSS الخاص بك -->
     <link rel="stylesheet" href="stiyel.css">
+
+    <style>
+        /* تصميم الإشعار الداخلي (Custom Modal) */
+        .custom-alert-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.45);
+            backdrop-filter: blur(4px);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .custom-alert-box {
+            background: #ffffff;
+            width: 90%;
+            max-width: 420px;
+            padding: 25px 20px;
+            border-radius: 16px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(43, 88, 63, 0.2);
+            border: 1px solid #d4ebd4;
+            animation: scaleUp 0.3s ease;
+        }
+
+        .custom-alert-icon {
+            font-size: 2.8rem;
+            color: #d9534f;
+            margin-bottom: 12px;
+        }
+
+        .custom-alert-title {
+            font-size: 1.25rem;
+            color: #2b583f;
+            margin: 0 0 8px 0;
+            font-weight: bold;
+        }
+
+        .custom-alert-message {
+            color: #555;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .custom-alert-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .custom-alert-btn {
+            padding: 10px 20px;
+            border-radius: 20px;
+            border: none;
+            font-weight: bold;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: 0.2s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-confirm {
+            background: #2b583f;
+            color: white;
+        }
+
+        .btn-confirm:hover {
+            background: #214431;
+        }
+
+        .btn-close {
+            background: #f0f0f0;
+            color: #666;
+        }
+
+        .btn-close:hover {
+            background: #e0e0e0;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes scaleUp {
+            from { transform: scale(0.85); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+    </style>
 </head>
 
 <body>
@@ -93,6 +191,25 @@
         </section>
     </div>
 
+    <!-- الإشعار الداخلي للتنبيه بتسجيل الدخول -->
+    <div id="authAlertModal" class="custom-alert-overlay">
+        <div class="custom-alert-box">
+            <div class="custom-alert-icon">
+                <i class="fa-solid fa-user-lock"></i>
+            </div>
+            <h3 class="custom-alert-title">تسجيل الدخول مطلوب</h3>
+            <p class="custom-alert-message">
+                يرجى تسجيل الدخول وإدخال رمز التوثيق الخاص بالصيدلي أولاً لتتمكن من إضافة وتعديل بيانات المرضى.
+            </p>
+            <div class="custom-alert-actions">
+                <a href="signin.html" class="custom-alert-btn btn-confirm">
+                    <i class="fa-solid fa-right-to-bracket"></i> الذهاب لتسجيل الدخول
+                </a>
+                <button onclick="closeAuthModal()" class="custom-alert-btn btn-close">إلغاء</button>
+            </div>
+        </div>
+    </div>
+
     <!-- كود إظهار الخيارات المخصصة للمسجلين والتحكم بالصفحة -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
@@ -118,9 +235,18 @@
             if (isAuthorized) {
                 window.location.href = 'add-patient.html';
             } else {
-                alert('⚠️ يرجى تسجيل الدخول وإدخال رمز التوثيق أولاً لإضافة بيانات المرضى.');
-                window.location.href = 'signin.html';
+                showAuthModal();
             }
+        }
+
+        function showAuthModal() {
+            const modal = document.getElementById('authAlertModal');
+            if (modal) modal.style.display = 'flex';
+        }
+
+        function closeAuthModal() {
+            const modal = document.getElementById('authAlertModal');
+            if (modal) modal.style.display = 'none';
         }
 
         function logout() {

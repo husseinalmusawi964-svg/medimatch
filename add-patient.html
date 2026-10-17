@@ -138,6 +138,7 @@
             <div id="statusToast" class="inline-toast"></div>
             
             <form id="doctor-form">
+                <!-- تم تصحيح علامات التنصيص هنا ليصبح الحقل مخفياً تماماً -->
                 <input type="hidden" id="editingPatientId" value="">
 
                 <div style="background: #f0f7f4; padding: 15px; border-radius: 12px; border: 1px solid #d4ebd4; margin-bottom: 15px;">
@@ -235,7 +236,6 @@
             toast.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         }
 
-        // دالة تضمن إنشاء خانة الدواء بشكل صحيح مع عنونة واضحة لمدخلات الدواء
         function createMedCard(name = '', dose = '', time = '', imgSrc = '') {
             const newCard = document.createElement('div');
             newCard.className = 'med-card med-input-group';
@@ -329,7 +329,6 @@
             const editId = urlParams.get('edit');
             const container = document.getElementById('medicines-inputs-container');
 
-            // تفعيل زر إضافة دواء جديد
             document.getElementById('add-med-btn').addEventListener('click', () => {
                 container.appendChild(createMedCard());
             });
@@ -365,10 +364,105 @@
                     showToast("حدث خطأ أثناء تحميل بيانات المريض", "error");
                 }
             } else {
-                // إذا كانت صفحة إضافة مريض جديد، أضف خانة دواء فارغة افتراضياً
                 container.appendChild(createMedCard());
             }
+
+            document.getElementById('doctor-form').addEventListener('submit', async (e) => {
+                e.preventDefault();
+
+                const submitBtn = document.getElementById('submitBtn');
+                const originalBtnText = submitBtn.innerHTML;
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> جاري الحفظ على السحابة...`;
+
+                try {
+                    const name = document.getElementById('patientName').value.trim();
+                    const age = document.getElementById('patientAge').value.trim();
+                    const conditionVal = document.getElementById('patientCondition').value.trim();
+                    const allergies = document.getElementById('patientAllergies').value.trim();
+                    const notes = document.getElementById('patientNotes').value.trim();
+                    const editingId = document.getElementById('editingPatientId').value;
+
+                    const medCards = document.querySelectorAll('.med-card');
+                    const medicines = [];
+                    medCards.forEach(card => {
+                        medicines.push({
+                            name: card.querySelector('.med-name').value.trim(),
+                            dose: card.querySelector('.med-dose').value.trim(),
+                            time: card.querySelector('.med-time').value.trim(),
+                            image: card.querySelector('.existing-img-url').value || ''
+                        });
+                    });
+
+                    const patientData = {
+                        name,
+                        age,
+                        condition: conditionVal,
+                        allergies,
+                        notes,
+                        medicines,
+                        doctorName: localStorage.getItem('doctorName') || 'الصيدلي',
+                        updatedAt: new Date().toISOString()
+                    };
+
+                    let savedId = editingId;
+
+                    if (editingId) {
+                        const docRef = doc(db, "patients", editingId);
+                        await updateDoc(docRef, patientData);
+                        showToast("تم تحديث بيانات المريض بنجاح على السحابة!", "success");
+                    } else {
+                        patientData.createdAt = new Date().toISOString();
+                        const docRef = await addDoc(collection(db, "patients"), patientData);
+                        savedId = docRef.id;
+                        document.getElementById('editingPatientId').value = savedId;
+                        showToast("تم حفظ بيانات المريض وتوليد البطاقة السحابية بنجاح!", "success");
+                    }
+
+                    displayQRCode(savedId);
+
+                } catch (error) {
+                    console.error("Error saving patient:", error);
+                    showToast("حدث خطأ أثناء الحفظ على السحابة، يرجى المحاولة لاحقاً.", "error");
+                } finally {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = originalBtnText;
+                }
+            });
         });
+
+        function displayQRCode(patientId) {
+            document.getElementById('displaySerial').textContent = patientId;
+            const previewUrl = `view.html?id=${patientId}`;
+            document.getElementById('previewLink').href = previewUrl;
+            
+            const qrContainer = document.getElementById('qrcode');
+            qrContainer.innerHTML = '';
+            
+            const fullPreviewUrl = window.location.origin + '/' + previewUrl;
+            
+            new QRCode(qrContainer, {
+                text: fullPreviewUrl,
+                width: 150,
+                height: 150,
+                colorDark: "#2b583f",
+                colorLight: "#ffffff",
+                correctLevel: QRCode.CorrectLevel.H
+            });
+
+            document.getElementById('qrcode-section').style.display = 'block';
+            document.getElementById('qrcode-section').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        window.printQRCode = function() {
+            window.print();
+        }
+
+        window.logoutSystem = function() {
+            localStorage.removeItem('isAuthorizedDoctor');
+            localStorage.removeItem('doctorName');
+            window.location.href = 'signin.html';
+        }
     </script>
 </body>
 </html>
