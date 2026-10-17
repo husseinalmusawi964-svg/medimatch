@@ -3,272 +3,221 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MediMatch - تسجيل الدخول ومزامنة الحسابات</title>
+    <title>MediMatch - المنصة الدوائية السحابية</title>
     
     <link rel="stylesheet" href="stiyel.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
         body { 
             background-color: #f4f7f5; 
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
             margin: 0; 
             padding: 0; 
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
-            min-height: 100vh; 
         }
-        .auth-card { 
-            background: #ffffff; 
-            width: 100%; 
-            max-width: 480px; 
-            padding: 35px; 
-            border-radius: 18px; 
-            box-shadow: 0 10px 30px rgba(43, 88, 63, 0.12); 
-            border: 1px solid #d4ebd4; 
+
+        .hero-container {
+            max-width: 800px;
+            margin: 30px auto;
+            background: #ffffff;
+            padding: 40px 25px;
+            border-radius: 18px;
+            box-shadow: 0 8px 20px rgba(43, 88, 63, 0.08);
+            border: 1px solid #d4ebd4;
+            text-align: center;
+            box-sizing: border-box;
         }
-        .tab-btns { 
-            display: flex; 
-            margin-bottom: 25px; 
-            border-bottom: 2px solid #eef3f0; 
+
+        .hero-logo {
+            width: 110px;
+            height: 110px;
+            object-fit: contain;
+            margin-bottom: 15px;
         }
-        .tab-btn { 
-            flex: 1; 
-            padding: 12px; 
-            background: none; 
-            border: none; 
-            font-size: 1rem; 
-            font-weight: bold; 
-            cursor: pointer; 
-            color: #666; 
-            transition: 0.3s; 
+
+        .hero-title {
+            color: #2b583f;
+            font-size: 2.1rem;
+            margin: 0 0 12px 0;
+            font-weight: bold;
         }
-        .tab-btn.active { 
-            color: #2b583f; 
-            border-bottom: 3px solid #2b583f; 
-            margin-bottom: -2px; 
+
+        .hero-subtitle {
+            color: #555;
+            font-size: 1rem;
+            line-height: 1.7;
+            max-width: 620px;
+            margin: 0 auto 30px auto;
         }
-        .form-section { display: none; }
-        .form-section.active { display: block; }
-        .input-group { margin-bottom: 15px; text-align: right; }
-        .input-group label { display: block; margin-bottom: 5px; color: #2b583f; font-weight: bold; font-size: 0.9rem; }
-        .input-group input { 
-            width: 100%; 
-            padding: 12px 14px; 
-            background: #fafcfb; 
-            border: 1px solid #cce5cc; 
-            color: #222; 
-            border-radius: 8px; 
-            font-size: 0.95rem; 
-            box-sizing: border-box; 
+
+        .btn-grid {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 20px;
         }
-        .input-group input:focus { 
-            border-color: #2b583f; 
-            outline: none; 
-            background: #fff;
-            box-shadow: 0 0 5px rgba(43, 88, 63, 0.2);
+
+        .btn-green-main {
+            background: #2b583f;
+            color: white;
+            text-decoration: none;
+            padding: 13px 28px;
+            border-radius: 25px;
+            font-weight: bold;
+            font-size: 0.98rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(43, 88, 63, 0.15);
         }
-        .btn-submit { 
-            background: #2b583f; 
-            color: white; 
-            border: none; 
-            width: 100%; 
-            padding: 13px; 
-            border-radius: 8px; 
-            font-weight: bold; 
-            font-size: 1rem; 
-            cursor: pointer; 
-            margin-top: 10px; 
-            transition: 0.2s; 
+
+        .btn-green-main:hover {
+            background: #224431;
+            transform: translateY(-2px);
         }
-        .btn-submit:hover { background: #1f3f2d; }
+
+        .btn-green-outline {
+            background: #e2efe2;
+            color: #2b583f;
+            text-decoration: none;
+            padding: 13px 28px;
+            border-radius: 25px;
+            font-weight: bold;
+            font-size: 0.98rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            border: 1px solid #2b583f;
+            transition: all 0.3s ease;
+        }
+
+        .btn-green-outline:hover {
+            background: #d4ebd4;
+            transform: translateY(-2px);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 18px;
+            margin-top: 40px;
+            text-align: right;
+        }
+
+        .feature-card {
+            background: #fafcfb;
+            border: 1px solid #d4ebd4;
+            padding: 20px;
+            border-radius: 12px;
+        }
+
+        .feature-card i {
+            font-size: 1.6rem;
+            color: #2b583f;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .feature-card h3 {
+            margin: 0 0 6px 0;
+            color: #2b583f;
+            font-size: 1.05rem;
+        }
+
+        .feature-card p {
+            margin: 0;
+            color: #666;
+            font-size: 0.85rem;
+            line-height: 1.5;
+        }
+
+        @media (max-width: 600px) {
+            .hero-container { margin: 15px 10px; padding: 25px 15px; }
+            .hero-title { font-size: 1.6rem; }
+            .hero-subtitle { font-size: 0.9rem; }
+            .btn-green-main, .btn-green-outline { width: 100%; justify-content: center; }
+        }
     </style>
 </head>
 <body>
 
-    <div class="auth-card">
-        <div style="text-align: center; margin-bottom: 20px;">
-            <img src="imeg/IMG_9459.PNG" alt="Logo" style="width: 75px; height: 75px; object-fit: contain;">
-            <h2 style="color: #2b583f; margin: 10px 0 5px 0;">نظام MediMatch الطبي</h2>
-            <p style="color: #666; font-size: 0.85rem;">بوابة إدارة الصيدليات والمرضى السحابية</p>
-        </div>
-
-        <div class="tab-btns">
-            <button class="tab-btn active" onclick="switchTab('signin')">تسجيل الدخول</button>
-            <button class="tab-btn" onclick="switchTab('signup')">إنشاء حساب جديد</button>
-        </div>
-
-        <!-- قسم تسجيل الدخول -->
-        <div id="signinSection" class="form-section active">
-            <form id="loginForm">
-                <div class="input-group">
-                    <label><i class="fa-solid fa-envelope"></i> البريد الإلكتروني:</label>
-                    <input type="email" id="loginEmail" required placeholder="name@example.com">
-                </div>
-                <div class="input-group">
-                    <label><i class="fa-solid fa-key"></i> كلمة المرور:</label>
-                    <input type="password" id="loginPassword" required placeholder="••••••••">
-                </div>
-                <button type="submit" class="btn-submit">دخول إلى لوحة التحكم</button>
-            </form>
-        </div>
-
-        <!-- قسم إنشاء حساب جديد -->
-        <div id="signupSection" class="form-section">
-            <form id="registerForm">
-                <!-- رمز الصلاحية -->
-                <div class="input-group" style="background: #f0f7f4; padding: 12px; border-radius: 10px; border: 1px dashed #2b583f;">
-                    <label style="color: #2b583f;"><i class="fa-solid fa-shield-halved" style="color: #b22222;"></i> رمز الصلاحية المعتمد:</label>
-                    <input type="password" id="regMasterKey" required placeholder="أدخل رمز التسجيل السري" style="border-color: #f5c6cb; background: #fffdfd;">
-                </div>
-
-                <div class="input-group">
-                    <label><i class="fa-solid fa-envelope"></i> البريد الإلكتروني:</label>
-                    <input type="email" id="regEmail" required placeholder="name@example.com">
-                </div>
-
-                <div class="input-group">
-                    <label><i class="fa-solid fa-user"></i> اسم الطبيب / الصيدلي:</label>
-                    <input type="text" id="regName" required placeholder="د. أحمد محمد">
-                </div>
-
-                <div class="input-group">
-                    <label><i class="fa-solid fa-hospital"></i> اسم الصيدلية:</label>
-                    <input type="text" id="regPharmacy" required placeholder="صيدلية الشفاء المركزية">
-                </div>
-
-                <div class="input-group">
-                    <label><i class="fa-solid fa-lock"></i> الرمز السري للحساب:</label>
-                    <input type="password" id="regAccountPass" required placeholder="••••••••">
-                </div>
-
-                <button type="submit" class="btn-submit">إنشاء الحساب وبدء العمل</button>
-            </form>
+    <!-- الهيدر الأخضر الموحد -->
+    <div class="heho">
+        <a href="index.html"><img class="soso" src="imeg/IMG_9459.PNG" alt="MediMatch Logo"></a>
+        <div class="fofo" id="navLinksContainer">
+            <a href="index.html" style="color: #2b583f; font-weight: bold;">Home</a>
+            <a href="my-patients.html">My Patients</a>
+            <a href="add-patient.html">Add patient</a>
+            <a href="help.html">Help</a>
+            <span id="authNavArea">
+                <a href="signin.html">Sign In</a>
+            </span>
         </div>
     </div>
 
-    <!-- ربط وتفعيل Firestore للتسجيل السحابي -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-app.js";
-        import { getFirestore, collection, addDoc, getDocs, query, where } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-firestore.js";
+    <div style="padding: 10px;">
+        <div class="hero-container">
+            
+            <img src="imeg/IMG_9459.PNG" class="hero-logo" alt="MediMatch Logo">
+            <h1 class="hero-title">منصة MediMatch الطبية</h1>
+            <p class="hero-subtitle">
+                المنظومة السحابية المعتمدة لإدارة البطاقات الدوائية الرقمية، متابعة حالة المرضى وحساسية الأدوية، وتوليد بطاقات الـ QR Code التفاعلية فورياً.
+            </p>
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyDrVLbKYdOZjZwo4ZpTuT2mhhJNG_UQUYc",
-            authDomain: "madimatch.firebaseapp.com",
-            projectId: "madimatch",
-            storageBucket: "madimatch.firebasestorage.app",
-            messagingSenderId: "243542423910",
-            appId: "1:243542423910:web:98422e0330e2b8237fb0a7",
-            measurementId: "G-FT9NDV35BS"
-        };
+            <div class="btn-grid">
+                <a href="add-patient.html" class="btn-green-main">
+                    <i class="fa-solid fa-user-plus"></i> إضافة مريض وجدول دوائي
+                </a>
+                <a href="my-patients.html" class="btn-green-outline">
+                    <i class="fa-solid fa-folder-open"></i> سجل المرضى السحابي
+                </a>
+            </div>
 
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
+            <!-- كروت المميزات للثيم الأخضر -->
+            <div class="features-grid">
+                <div class="feature-card">
+                    <i class="fa-solid fa-qrcode"></i>
+                    <h3>بطاقات QR رقمية</h3>
+                    <p>توليد وطباعة كود QR خاص بكل مريض يسمح بمعاينة الأدوية فوراً عبر الهاتف.</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fa-solid fa-cloud"></i>
+                    <h3>تخزين سحابي آمن</h3>
+                    <p>حفظ وسحب بيانات المرضى وجداول العلاج بأمان تام وعبر أي جهاز محمول.</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fa-solid fa-pills"></i>
+                    <h3>إدارة دقيقة للجرعات</h3>
+                    <p>إرفاق صور الأدوية، الجرعات، والأوقات بالإضافة للتحذيرات وحساسية الأدوية.</p>
+                </div>
+            </div>
 
-        const ADMIN_SECRET_REGISTRATION_KEY = "MED-PHARMACY-2026-KEY";
+        </div>
+    </div>
 
-        window.switchTab = function(tab) {
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            document.querySelectorAll('.form-section').forEach(s => s.classList.remove('active'));
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const isAuth = localStorage.getItem('isAuthorizedDoctor');
+            const doctorName = localStorage.getItem('doctorName') || 'الصيدلي';
+            const authNavArea = document.getElementById('authNavArea');
 
-            if (tab === 'signin') {
-                document.querySelectorAll('.tab-btn')[0].classList.add('active');
-                document.getElementById('signinSection').classList.add('active');
-            } else {
-                document.querySelectorAll('.tab-btn')[1].classList.add('active');
-                document.getElementById('signupSection').classList.add('active');
-            }
-        }
-
-        // دالة تشفير كلمة المرور بـ SHA-256
-        async function hashPassword(password) {
-            const msgBuffer = new TextEncoder().encode(password);
-            const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
-            const hashArray = Array.from(new Uint8Array(hashBuffer));
-            return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-        }
-
-        // إنشاء حساب جديد
-        document.getElementById('registerForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const inputMasterKey = document.getElementById('regMasterKey').value.trim();
-            const email = document.getElementById('regEmail').value.trim();
-            const fullName = document.getElementById('regName').value.trim();
-            const pharmacyName = document.getElementById('regPharmacy').value.trim();
-            const password = document.getElementById('regAccountPass').value;
-
-            if (inputMasterKey !== ADMIN_SECRET_REGISTRATION_KEY) {
-                alert('❌ خطأ أمني: رمز الصلاحية المعتمد غير صحيح!');
-                return;
-            }
-
-            try {
-                const q = query(collection(db, "doctors"), where("email", "==", email));
-                const querySnapshot = await getDocs(q);
-                
-                if (!querySnapshot.empty) {
-                    alert('⚠️ هذا البريد الإلكتروني مسجل مسبقاً!');
-                    return;
-                }
-
-                const hashedPassword = await hashPassword(password);
-
-                await addDoc(collection(db, "doctors"), {
-                    fullName: fullName,
-                    pharmacyName: pharmacyName,
-                    email: email,
-                    password: hashedPassword,
-                    createdAt: new Date()
-                });
-
-                localStorage.setItem('isAuthorizedDoctor', 'true');
-                localStorage.setItem('doctorName', fullName);
-                
-                alert('🎉 تم إنشاء الحساب بنجاح!');
-                // التوجيه إلى الصفحة الرئيسية / لوحة التحكم الصحيحة
-                window.location.href = 'index.html';
-            } catch (error) {
-                console.error(error);
-                alert('⚠️ حدث خطأ أثناء إنشاء الحساب: ' + error.message);
+            if (isAuth === 'true') {
+                authNavArea.innerHTML = `
+                    <span style="color: #85c29d; font-weight: bold; padding: 6px 10px; display: inline-flex; align-items: center; gap: 5px;">
+                        <i class="fa-solid fa-user-shield"></i> ${doctorName}
+                    </span>
+                    <button onclick="logoutSystem()" style="background: #d9534f; color: white; border: none; padding: 5px 10px; border-radius: 12px; cursor: pointer; font-size: 0.8rem; margin-right: 5px;">خروج</button>
+                `;
             }
         });
 
-        // تسجيل الدخول
-        document.getElementById('loginForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const email = document.getElementById('loginEmail').value.trim();
-            const password = document.getElementById('loginPassword').value;
-
-            try {
-                const hashedPassword = await hashPassword(password);
-
-                const q = query(
-                    collection(db, "doctors"), 
-                    where("email", "==", email), 
-                    where("password", "==", hashedPassword)
-                );
-                const querySnapshot = await getDocs(q);
-
-                if (!querySnapshot.empty) {
-                    let docName = "الصيدلي";
-                    querySnapshot.forEach((doc) => {
-                        docName = doc.data().fullName;
-                    });
-
-                    localStorage.setItem('isAuthorizedDoctor', 'true');
-                    localStorage.setItem('doctorName', docName);
-
-                    alert(`مرحباً بك مجدداً د. ${docName}`);
-                    // التوجيه إلى الصفحة الرئيسية / لوحة التحكم الصحيحة
-                    window.location.href = 'index.html';
-                } else {
-                    alert('❌ البريد الإلكتروني أو كلمة المرور غير صحيحة!');
-                }
-            } catch (error) {
-                console.error(error);
-                alert('❌ حدث خطأ أثناء تسجيل الدخول.');
-            }
-        });
+        function logoutSystem() {
+            localStorage.removeItem('isAuthorizedDoctor');
+            localStorage.removeItem('doctorName');
+            window.location.reload();
+        }
     </script>
 </body>
 </html>

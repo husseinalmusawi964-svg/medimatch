@@ -9,23 +9,26 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         body { background-color: #f4f7f5; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; }
-        .card-container { max-width: 650px; margin: 30px auto; background: #fff; padding: 30px; border-radius: 18px; box-shadow: 0 10px 25px rgba(43, 88, 63, 0.08); border: 1px solid #d4ebd4; text-align: right; }
+        .card-container { max-width: 650px; margin: 30px auto; background: #fff; padding: 30px; border-radius: 18px; box-shadow: 0 10px 25px rgba(43, 88, 63, 0.08); border: 1px solid #d4ebd4; text-align: right; box-sizing: border-box; }
         .med-item { background: #fafcfb; border: 1px solid #d4ebd4; border-radius: 12px; padding: 15px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; gap: 15px; }
         .med-img { width: 65px; height: 65px; object-fit: cover; border-radius: 10px; border: 1px solid #cce5cc; }
         .badge-warning { background: #fff3cd; color: #856404; border: 1px solid #ffeeba; padding: 10px 15px; border-radius: 10px; font-weight: bold; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+        @media (max-width: 600px) {
+            .card-container { margin: 15px; padding: 18px; border-radius: 14px; }
+        }
     </style>
 </head>
 <body>
 
     <div class="heho">
-        <a href="ph.html"><img class="soso" src="imeg/IMG_9459.PNG" alt="Logo"></a>
+        <a href="index.html"><img class="soso" src="imeg/IMG_9459.PNG" alt="Logo"></a>
         <div class="fofo">
-            <a href="ph.html">الرئيسية</a>
-            <a href="help.html">المساعدة</a>
+            <a href="index.html">Home</a>
+            <a href="help.html">Help</a>
         </div>
     </div>
 
-    <div style="padding: 20px;">
+    <div style="padding: 10px;">
         <div class="card-container" id="patientCard">
             <div style="text-align: center; padding: 40px; color: #2b583f;">
                 <i class="fa-solid fa-spinner fa-spin" style="font-size: 2.5rem; margin-bottom: 15px;"></i>
@@ -34,7 +37,6 @@
         </div>
     </div>
 
-    <!-- جلب البيانات سحابياً من Firestore -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-app.js";
         import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-firestore.js";
@@ -128,36 +130,4 @@
 
                 <div style="background: #f0f7f4; padding: 18px; border-radius: 14px; border: 1px solid #d4ebd4; margin-bottom: 25px;">
                     <h3 style="color: #2b583f; margin-top: 0; margin-bottom: 12px; font-size: 1.1rem; border-bottom: 1px solid #cce5cc; padding-bottom: 6px;">
-                        <i class="fa-solid fa-user"></i> المعلومات الشخصية
-                    </h3>
-                    <p style="margin: 6px 0; font-size: 0.95rem; color: #333;"><strong>اسم المريض:</strong> ${patient.name}</p>
-                    <p style="margin: 6px 0; font-size: 0.95rem; color: #333;"><strong>العمر:</strong> ${patient.age} سنة</p>
-                    <p style="margin: 6px 0; font-size: 0.95rem; color: #333;"><strong>الحالة الصحية:</strong> ${patient.condition}</p>
-                </div>
-
-                <h3 style="color: #2b583f; font-size: 1.2rem; margin-bottom: 15px;">
-                    <i class="fa-solid fa-pills"></i> الجدول الدوائي الموصى به
-                </h3>
-
-                <div>${medicinesHTML}</div>
-
-                <div style="text-align: center; margin-top: 30px; font-size: 0.8rem; color: #888;">
-                    <p>تم استخراج هذه البطاقة عبر نظام MediMatch السحابي المعتمد للصيدليات</p>
-                </div>
-            `;
-        }
-
-        function renderNotFound(message) {
-            const container = document.getElementById('patientCard');
-            container.innerHTML = `
-                <div style="text-align: center; padding: 20px;">
-                    <i class="fa-solid fa-triangle-exclamation" style="font-size: 3.5rem; color: #d9534f; margin-bottom: 15px;"></i>
-                    <h3 style="color: #d9534f; margin-bottom: 10px;">عذراً، لم يتم العثور على البيانات</h3>
-                    <p style="color: #666; font-size: 0.95rem; line-height: 1.6;">${message}</p>
-                    <a href="ph.html" style="display: inline-block; margin-top: 15px; background: #2b583f; color: white; text-decoration: none; padding: 10px 20px; border-radius: 20px; font-weight: bold;">العودة للرئيسية</a>
-                </div>
-            `;
-        }
-    </script>
-</body>
-</html>
+                        <i class="

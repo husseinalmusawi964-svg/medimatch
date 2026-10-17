@@ -3,55 +3,110 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MediMatch - قائمة المرضى</title>
-    
+    <title>MediMatch - سجل المرضى والصيدليات</title>
+
     <script>
         if (localStorage.getItem('isAuthorizedDoctor') !== 'true') {
-            alert('⚠️ غير مصرح لك بالدخول!');
             window.location.href = 'signin.html';
         }
     </script>
 
     <link rel="stylesheet" href="stiyel.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
     <style>
-        .patients-table { width: 100%; border-collapse: collapse; margin-top: 15px; background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
-        .patients-table th, .patients-table td { padding: 14px 16px; text-align: right; border-bottom: 1px solid #eef3f0; }
-        .patients-table th { background-color: #2b583f; color: #fff; font-weight: 600; }
-        .patients-table tr:hover { background-color: #f9fbf9; }
-        .btn-edit-patient { background-color: #3b7a57; color: white; border: none; padding: 8px 14px; border-radius: 8px; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; }
-        .btn-delete-patient { background-color: #d9534f; color: white; border: none; padding: 8px 12px; border-radius: 8px; cursor: pointer; margin-right: 5px; }
-        .badge-allergy { background-color: #f8d7da; color: #721c24; padding: 4px 8px; border-radius: 6px; font-size: 0.82rem; font-weight: bold; }
+        body { background-color: #f4f7f5; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; }
+        
+        .main-container { max-width: 800px; margin: 20px auto; background: #fff; padding: 25px; border-radius: 16px; box-shadow: 0 8px 20px rgba(43, 88, 63, 0.08); border: 1px solid #d4ebd4; text-align: right; box-sizing: border-box; }
+        
+        .search-container {
+            position: relative;
+            margin-bottom: 20px;
+            width: 100%;
+        }
+        .search-container i {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #2b583f;
+            font-size: 1.1rem;
+            pointer-events: none;
+            transition: 0.3s;
+        }
+        .search-box { 
+            width: 100%; 
+            padding: 13px 45px 13px 15px; 
+            border: 1px solid #cce5cc; 
+            border-radius: 30px; 
+            font-size: 0.95rem; 
+            background: #fafcfb; 
+            box-sizing: border-box; 
+            outline: none; 
+            transition: all 0.3s ease;
+            color: #333;
+        }
+        .search-box:focus { 
+            border-color: #2b583f; 
+            background: #fff; 
+            box-shadow: 0 4px 12px rgba(43, 88, 63, 0.12); 
+        }
+
+        .patient-card { background: #ffffff; border: 1px solid #e2efe2; padding: 15px; border-radius: 12px; margin-top: 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.02); }
+        .patient-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #d4ebd4; padding-bottom: 8px; margin-bottom: 8px; flex-wrap: wrap; gap: 8px; }
+
+        .action-btns { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+        .btn-action { text-decoration: none; padding: 6px 14px; border-radius: 6px; font-size: 0.82rem; font-weight: bold; display: inline-flex; align-items: center; gap: 5px; cursor: pointer; border: none; }
+        .btn-view { background: #2b583f; color: white; }
+        .btn-edit { background: #e2efe2; color: #2b583f; border: 1px solid #2b583f; }
+
+        @media (max-width: 600px) {
+            .main-container { margin: 10px; padding: 15px; border-radius: 12px; }
+            .patient-header { flex-direction: column; align-items: flex-start; }
+            .action-btns { width: 100%; }
+            .btn-action { flex: 1; justify-content: center; text-align: center; }
+        }
     </style>
 </head>
-<body style="background-color: #f4f7f5; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0;">
+<body>
 
     <div class="heho">
-        <a href="ph.html"><img class="soso" src="imeg/IMG_9459.PNG" alt="Logo"></a>
-        <div class="fofo" id="navLinksContainer">
-            <a href="ph.html">Home</a>
-            <a href="my-patients.html" style="color: #2b583f; font-weight: bold;">My Patients</a>
+        <a href="index.html"><img class="soso" src="imeg/IMG_9459.PNG" alt="Logo"></a>
+        <div class="fofo">
+            <a href="index.html">Home</a>
             <a href="add-patient.html">Add patient</a>
             <a href="help.html">Help</a>
-            <span id="authNavArea">
-                <a href="signin.html" style="color: #2b583f; font-weight: bold;">Sign In</a>
-            </span>
+            <button onclick="logoutSystem()" style="background: #d9534f; color: white; border: none; padding: 6px 12px; border-radius: 12px; cursor: pointer; font-size: 0.85rem;">خروج</button>
         </div>
     </div>
 
-    <div style="padding: 30px 20px; max-width: 1000px; margin: 0 auto;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-            <h2 style="color: #2b583f; margin: 0;"><i class="fa-solid fa-users-medical"></i> قائمة المرضى المسجلين سحابياً</h2>
-            <a href="add-patient.html" class="btn-submit-main" style="text-decoration: none; padding: 10px 18px; width: auto; background: #2b583f; color: white; border-radius: 8px; font-weight: bold;"><i class="fa-solid fa-user-plus"></i> إضافة مريض جديد</a>
+    <div style="padding: 10px;">
+        <div class="main-container">
+            
+            <div style="text-align: center; margin-bottom: 20px; border-bottom: 2px solid #e2efe2; padding-bottom: 12px;">
+                <div style="font-size: 2.2rem; color: #2b583f; margin-bottom: 5px;"><i class="fa-solid fa-clinic-medical"></i></div>
+                <h2 style="color: #2b583f; margin: 0; font-size: 1.4rem;">سجل المرضى السحابي</h2>
+                <p style="color: #666; font-size: 0.85rem; margin-top: 4px;">إدارة وعرض كافّة المرضى والجدول الدوائي عبر السحابة</p>
+            </div>
+
+            <div class="search-container">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" id="searchInput" class="search-box" placeholder="ابحث باسم المريض أو المعرف (ID)..." onkeyup="filterPatients()">
+            </div>
+
+            <div id="patientsListContainer">
+                <p style="text-align: center; color: #888;">جاري جلب المرضى من السحابة...</p>
+            </div>
+
+            <div style="text-align: center; margin-top: 25px;">
+                <a href="index.html" style="background: #2b583f; color: white; text-decoration: none; padding: 10px 22px; border-radius: 20px; font-weight: bold; font-size: 0.9rem; display: inline-block;">العودة للصفحة الرئيسية</a>
+            </div>
+
         </div>
-        <div id="patientsContainer" style="text-align: center; padding: 20px; color: #666;">جاري تحميل بيانات المرضى من السحابة...</div>
     </div>
 
-    <!-- كود جافاسكريبت وربط Firebase لجلب وحذف المرضى -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-app.js";
-        import { getFirestore, collection, getDocs, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-firestore.js";
+        import { getFirestore, collection, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDrVLbKYdOZjZwo4ZpTuT2mhhJNG_UQUYc",
@@ -66,109 +121,67 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        document.addEventListener('DOMContentLoaded', () => {
-            const isAuth = localStorage.getItem('isAuthorizedDoctor');
-            const doctorName = localStorage.getItem('doctorName') || 'الصيدلي';
-            const authNavArea = document.getElementById('authNavArea');
+        let allPatientsData = [];
 
-            if (isAuth === 'true') {
-                authNavArea.innerHTML = `
-                    <span style="color: #85c29d; font-weight: bold; padding: 6px 10px; display: inline-flex; align-items: center; gap: 5px;">
-                        <i class="fa-solid fa-user-shield"></i> ${doctorName}
-                    </span>
-                    <button onclick="logoutSystem()" style="background: #d9534f; color: white; border: none; padding: 5px 10px; border-radius: 12px; cursor: pointer; font-size: 0.8rem; margin-right: 5px;">خروج</button>
-                `;
-            }
-            loadPatientsFromCloud();
+        document.addEventListener('DOMContentLoaded', async () => {
+            await loadPatientsFromCloud();
         });
 
-        window.logoutSystem = function() {
-            localStorage.removeItem('isAuthorizedDoctor');
-            localStorage.removeItem('doctorName');
-            window.location.href = 'signin.html';
-        }
-
-        // جلب قائمة المرضى من سحابة Firestore
         async function loadPatientsFromCloud() {
-            const container = document.getElementById('patientsContainer');
+            const container = document.getElementById('patientsListContainer');
             try {
-                const querySnapshot = await getDocs(collection(db, "patients"));
-                const patientsList = [];
-                
-                querySnapshot.forEach((docSnap) => {
-                    patientsList.push({ id: docSnap.id, ...docSnap.data() });
+                const q = query(collection(db, "patients"), orderBy("updatedAt", "desc"));
+                const querySnapshot = await getDocs(q);
+
+                allPatientsData = [];
+                querySnapshot.forEach((doc) => {
+                    allPatientsData.push({ id: doc.id, ...doc.data() });
                 });
 
-                if (patientsList.length === 0) {
-                    container.innerHTML = `
-                        <div style="text-align: center; background: white; padding: 40px; border-radius: 12px; border: 1px solid #d4ebd4;">
-                            <i class="fa-solid fa-folder-open" style="font-size: 3rem; color: #a8c2b3; margin-bottom: 12px;"></i>
-                            <h3 style="color: #2b583f; margin: 0;">لا يوجد مرضى مسجلين على السحابة حتى الآن</h3>
-                        </div>`;
-                    return;
-                }
-
-                let tableHtml = `
-                    <table class="patients-table">
-                        <thead>
-                            <tr>
-                                <th>المعرف السحابي</th>
-                                <th>اسم المريض</th>
-                                <th>العمر</th>
-                                <th>الحالة الصحية</th>
-                                <th>حساسية الأدوية</th>
-                                <th>الأدوية</th>
-                                <th>الإجراءات</th>
-                            </tr>
-                        </thead>
-                        <tbody>`;
-
-                patientsList.forEach(patient => {
-                    const medCount = patient.medicines ? patient.medicines.length : 0;
-                    const allergyDisplay = (patient.allergies && patient.allergies !== 'لا توجد') 
-                        ? `<span class="badge-allergy">${patient.allergies}</span>` 
-                        : '<span style="color: #888;">لا توجد</span>';
-
-                    tableHtml += `
-                        <tr>
-                            <td><b style="font-size: 0.85rem; color: #2b583f;">${patient.id}</b></td>
-                            <td>${patient.name}</td>
-                            <td>${patient.age} سنة</td>
-                            <td>${patient.condition}</td>
-                            <td>${allergyDisplay}</td>
-                            <td>${medCount} دواء</td>
-                            <td>
-                                <a href="add-patient.html?edit=${patient.id}" class="btn-edit-patient">
-                                    <i class="fa-solid fa-pen-to-square"></i> تعديل
-                                </a>
-                                <button onclick="deletePatientCloud('${patient.id}')" class="btn-delete-patient">
-                                    <i class="fa-solid fa-trash"></i>
-                                </button>
-                            </td>
-                        </tr>`;
-                });
-                tableHtml += `</tbody></table>`;
-                container.innerHTML = tableHtml;
-
+                renderPatientsList(allPatientsData);
             } catch (error) {
-                console.error("خطأ في جلب المرضى:", error);
-                container.innerHTML = `<p style="color: #d9534f;">حدث خطأ أثناء تحميل البيانات من السحابة.</p>`;
+                console.error("خطأ في جلب بيانات السحابة:", error);
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 20px; color: #d9534f;">
+                        <i class="fa-solid fa-triangle-exclamation" style="font-size: 2rem; margin-bottom: 8px;"></i>
+                        <p style="font-weight: bold; margin: 0;">حدث خطأ أثناء تحميل سجل المرضى من السحابة.</p>
+                    </div>
+                `;
             }
         }
 
-        // حذف مريض من السحابة
-        window.deletePatientCloud = async function(patientId) {
-            if (confirm(`هل أنت متأكد من حذف المريض نهائياً من السحابة؟`)) {
-                try {
-                    await deleteDoc(doc(db, "patients", patientId));
-                    alert('✅ تم حذف المريض بنجاح.');
-                    loadPatientsFromCloud();
-                } catch (error) {
-                    console.error("خطأ في الحذف:", error);
-                    alert('❌ حدث خطأ أثناء الحذف.');
-                }
+        function renderPatientsList(patients) {
+            const container = document.getElementById('patientsListContainer');
+
+            if (patients.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 25px; background: #fafcfb; border-radius: 12px; border: 1px dashed #d4ebd4; color: #777;">
+                        <i class="fa-solid fa-folder-open" style="font-size: 2rem; color: #a5d6a5; margin-bottom: 8px;"></i>
+                        <p style="margin: 0; font-weight: bold;">لا يوجد مرضى مطابقون لنتائج البحث.</p>
+                    </div>
+                `;
+                return;
             }
-        }
-    </script>
-</body>
-</html>
+
+            container.innerHTML = '';
+
+            patients.forEach(patient => {
+                let medsHTML = '';
+                if (patient.medicines && patient.medicines.length > 0) {
+                    medsHTML = '<ul style="padding-right: 18px; margin: 6px 0 0 0; color: #444; font-size: 0.88rem;">';
+                    patient.medicines.forEach(med => {
+                        medsHTML += `<li><b>${med.name}</b> - الجرعة: ${med.dose} (${med.time})</li>`;
+                    });
+                    medsHTML += '</ul>';
+                } else {
+                    medsHTML = '<p style="margin: 4px 0; font-size: 0.85rem; color: #888;">لا توجد أدوية مضافة.</p>';
+                }
+
+                const patientCard = document.createElement('div');
+                patientCard.className = 'patient-card';
+                patientCard.innerHTML = `
+                    <div class="patient-header">
+                        <h4 style="color: #2b583f; margin: 0; font-size: 1.05rem;">
+                            <i class="fa-solid fa-user-injured"></i> ${patient.name}
+                        </h4>
+                        <span style="background: #2b583f; color:

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Medimatch</title>
+    <title>MediMatch - بطاقتك الدوائية الرقمية</title>
     
     <!-- مكتبة الأيقونات -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -21,11 +21,11 @@
     
     <!-- الهيدر (Header) -->
     <div class="heho">
-        <a href="ph.html"> 
-            <img class="soso" src="imeg/IMG_9459.PNG" alt="Logo">
+        <a href="index.html"> 
+            <img class="soso" src="imeg/IMG_9459.PNG" alt="MediMatch Logo">
         </a>
         <div class="fofo">
-            <a href="ph.html">Home</a>
+            <a href="index.html">Home</a>
             
             <!-- رابط صفحة My Patients المنفصلة (يظهر فقط عند تسجيل الدخول) -->
             <a href="my-patients.html" id="nav-my-patients" style="display: none;">My Patients</a>
@@ -72,6 +72,7 @@
                         <h3>1. أضف البيانات</h3>
                         <p>أدخل بيانات المريض وأسماء الأدوية المزمنة والجرعات بكل سهولة.</p>
                     </div>
+
                     <div class="card">
                         <div class="icon-container">
                             <i class="fa-solid fa-qrcode"></i>
@@ -79,6 +80,7 @@
                         <h3>2. ولّد الـ QR</h3>
                         <p>أنشئ رمز الاستجابة السريعة (QR Code) المرتبط بالملف الطبي فوراً.</p>
                     </div>
+
                     <div class="card">
                         <div class="icon-container">
                             <i class="fa-solid fa-print"></i>
@@ -91,7 +93,7 @@
         </section>
     </div>
 
-    <!-- كود إظهار الخيارات المخصصة للمسجلين -->
+    <!-- كود إظهار الخيارات المخصصة للمسجلين والتحكم بالصفحة -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const isAuth = localStorage.getItem('isAuthorizedDoctor') === 'true';
@@ -125,35 +127,6 @@
             localStorage.clear();
             window.location.reload();
         }
-    </script>
-
-    <!-- ربط Firebase الأساسي (طريقة Script Tag) -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-app.js";
-        import { getAnalytics } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-analytics.js";
-        
-        // استيراد خدمات قاعدة البيانات والتخزين لتكون متاحة للمشروع
-        import { getFirestore } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-firestore.js";
-        import { getStorage } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-storage.js";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyDrVLbKYdOZjZwo4ZpTuT2mhhJNG_UQUYc",
-            authDomain: "madimatch.firebaseapp.com",
-            projectId: "madimatch",
-            storageBucket: "madimatch.firebasestorage.app",
-            messagingSenderId: "243542423910",
-            appId: "1:243542423910:web:98422e0330e2b8237fb0a7",
-            measurementId: "G-FT9NDV35BS"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const analytics = getAnalytics(app);
-        
-        // تفعيل قاعدة البيانات والتخزين وجعلهما جاهزتين للاستخدام العام في الصفحات
-        window.db = getFirestore(app);
-        window.storage = getStorage(app);
-
-        console.log("تم تعديل وربط صفحة MediMatch الرئيسية بـ Firebase بنجاح!");
     </script>
 </body>
 </html>
